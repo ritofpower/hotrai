@@ -1,0 +1,1171 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>หอไตร ค้นพระไตรปิฎก</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600&family=Srisakdi:wght@700&family=Taviraj:wght@400;600&display=swap">
+<style>
+/* Layout: one column (search, then results); the reader is a full-screen sheet on phones and a docked right pane from 1000px.
+   Palette: saffron robe on indigo ink; three pitaka colours mark every volume reference. */
+:root{
+  --bg:#F3F1EB; --surface:#FFFFFF; --sunk:#E6E2D8; --hover:#EFE7D9;
+  --ink:#1B2030; --muted:#5B5F6E; --line:#D8D3C6;
+  --accent:#A65B08; --accent-strong:#8A4A05; --accent-ink:#FFFFFF; --accent-soft:#F5E3C6;
+  --hit:#F9D57F; --hit-ink:#1B2030;
+  --vin:#B04A31; --sut:#B7700E; --abh:#3D5A8E;
+  --scrim:rgb(12 14 20 / .45);
+  --font-ui:"Anuphan","Noto Sans Thai","Leelawadee UI","Thonburi",system-ui,sans-serif;
+  --font-text:"Taviraj","Noto Serif Thai","Thonburi","Tahoma",serif;
+  --font-mark:"Srisakdi","Taviraj",serif;
+  --read-size:18px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#10131A; --surface:#181C26; --sunk:#0B0D12; --hover:#231E16;
+  --ink:#ECE8DE; --muted:#A4A4A8; --line:#2B303D;
+  --accent:#E9A24A; --accent-strong:#F2B868; --accent-ink:#1A1206; --accent-soft:#3A2911;
+  --hit:#7C5612; --hit-ink:#FFF3D6;
+  --vin:#E0806A; --sut:#E9A24A; --abh:#8FA7DC; --scrim:rgb(0 0 0 / .6); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#10131A; --surface:#181C26; --sunk:#0B0D12; --hover:#231E16;
+  --ink:#ECE8DE; --muted:#A4A4A8; --line:#2B303D;
+  --accent:#E9A24A; --accent-strong:#F2B868; --accent-ink:#1A1206; --accent-soft:#3A2911;
+  --hit:#7C5612; --hit-ink:#FFF3D6;
+  --vin:#E0806A; --sut:#E9A24A; --abh:#8FA7DC; --scrim:rgb(0 0 0 / .6); color-scheme:dark}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-ui);font-size:15px;line-height:1.55;-webkit-text-size-adjust:100%;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:860px;margin:0 auto}
+.muted{color:var(--muted)}
+.num{font-variant-numeric:tabular-nums}
+
+/* ---------- header + search ---------- */
+.brand{display:flex;align-items:center;gap:12px;padding-block:14px 6px}
+.mark{font-family:var(--font-mark);font-weight:700;font-size:30px;line-height:1;color:var(--accent);margin:0}
+.brand-sub{font-size:12.5px;color:var(--muted);line-height:1.35}
+.grow{flex:1}
+.iconbtn{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:12px;border:0;background:transparent;color:var(--ink)}
+.iconbtn:hover{background:var(--hover)}
+.iconbtn svg{width:22px;height:22px}
+.sbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);padding-block:8px}
+.sbox{display:flex;align-items:center;gap:6px;background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:4px 5px 4px 12px}
+.sbox:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.sbox svg{width:20px;height:20px;color:var(--muted);flex:none}
+.sbox input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:500 18px/1.4 var(--font-ui);color:var(--ink);padding:10px 2px}
+.sbox input::-webkit-search-cancel-button,.sbox input::-webkit-search-decoration{-webkit-appearance:none;appearance:none;display:none}
+.sbox input::placeholder{color:var(--muted);font-weight:400;opacity:.85}
+.go{border:0;background:var(--accent);color:var(--accent-ink);font-weight:600;border-radius:10px;padding:9px 16px;white-space:nowrap}
+.go:hover{background:var(--accent-strong)}
+.opts{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;padding-block:10px 2px}
+.seg{display:inline-flex;background:var(--sunk);border-radius:999px;padding:3px;gap:2px}
+.seg button{border:0;background:transparent;padding:6px 13px;border-radius:999px;font-size:13.5px;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);font-weight:600;box-shadow:0 1px 2px rgb(0 0 0 / .14)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:13.5px;line-height:1.3;color:var(--ink)}
+.chip:hover{border-color:var(--accent)}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.chip .n{color:var(--muted);margin-left:4px;font-variant-numeric:tabular-nums}
+.chip[aria-pressed="true"] .n{color:inherit;opacity:.75}
+.toggle{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;color:var(--muted);border:0;background:none;padding:4px 2px}
+.toggle i{width:34px;height:20px;border-radius:999px;background:var(--sunk);position:relative;flex:none;transition:background .15s}
+.toggle i::after{content:"";position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:var(--surface);box-shadow:0 1px 2px rgb(0 0 0 / .25);transition:transform .15s}
+.toggle[aria-pressed="true"]{color:var(--ink)}
+.toggle[aria-pressed="true"] i{background:var(--accent)}
+.toggle[aria-pressed="true"] i::after{transform:translateX(14px)}
+
+/* ---------- sections and rows ---------- */
+.sec{margin-top:22px}
+.sec-h{display:flex;align-items:baseline;gap:10px;margin:0 0 8px;font-size:12.5px;font-weight:600;letter-spacing:.06em;color:var(--muted)}
+.sec-h .grow{flex:1}
+.sec-h button{border:0;background:none;color:var(--accent-strong);font-size:13px;font-weight:600;letter-spacing:0;padding:0}
+.list{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.row{display:block;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:12px 4px;color:var(--ink)}
+.row:hover{background:var(--hover)}
+.t1{font-family:var(--font-text);font-weight:600;font-size:18px;line-height:1.35}
+.no{color:var(--muted);font-weight:400;margin-right:5px}
+.tag{display:inline-block;font:500 11.5px/1 var(--font-ui);padding:4px 7px;border-radius:999px;border:1px solid var(--line);color:var(--muted);vertical-align:3px;margin-left:6px;white-space:nowrap}
+.tag.code{border-color:transparent;background:var(--accent-soft);color:var(--accent-strong)}
+.tag.ph{border-color:transparent;background:var(--hit);color:var(--hit-ink)}
+.sub{font-family:var(--font-text);color:var(--muted);font-size:15px;line-height:1.5}
+.aka{font-size:13px;color:var(--muted)}
+.loc{display:flex;flex-wrap:wrap;align-items:center;gap:2px 10px;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;margin-top:3px}
+.vtag{display:inline-flex;align-items:center;gap:5px;font-weight:600;color:var(--ink)}
+.vtag::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--pk,var(--muted))}
+.pk-vin{--pk:var(--vin)} .pk-sut{--pk:var(--sut)} .pk-abh{--pk:var(--abh)}
+.snip{font-family:var(--font-text);font-size:16.5px;line-height:1.8;margin:5px 0 0;overflow-wrap:anywhere}
+mark{background:var(--hit);color:var(--hit-ink);border-radius:3px;padding:0 1px}
+.ctx{font-weight:600;color:var(--ink)}
+.more{display:block;margin:12px auto 0;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 18px;font-size:14px}
+.note{font-size:13.5px;color:var(--muted);margin:8px 0}
+.alert{background:var(--accent-soft);color:var(--ink);border-radius:12px;padding:10px 14px;font-size:14px;margin:10px 0}
+
+.jump{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--ink);color:var(--bg);border:0;border-radius:14px;padding:14px 16px;margin-top:16px}
+.jump b{font-family:var(--font-text);font-size:18px}
+.jump .grow{display:flex;flex-direction:column;gap:2px}
+.jump small{opacity:.75;font-size:13px}
+.jump svg{width:22px;height:22px;flex:none}
+
+.runbox{border:1px dashed var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.runbox .go{padding:10px 18px}
+.prog{height:4px;background:var(--sunk);border-radius:99px;overflow:hidden;width:100%}
+.prog i{display:block;height:100%;width:0;background:var(--accent);transition:width .15s}
+.status{font-size:13.5px;color:var(--muted)}
+
+/* shelf: 45 volumes as books on a shelf */
+.shelf{display:grid;grid-template-columns:repeat(45,minmax(0,1fr));gap:2px;align-items:end;height:68px;margin-top:6px}
+.shelf button{height:100%;border:0;padding:0;background:none;display:flex;align-items:flex-end;min-width:0}
+.shelf button span{display:block;width:100%;height:var(--h);min-height:3px;background:var(--pk);border-radius:2px 2px 0 0;opacity:.88}
+.shelf button.z span{opacity:.2}
+.shelf button[aria-pressed="true"] span{opacity:1;box-shadow:0 0 0 2px var(--ink)}
+.shelf-leg{display:grid;grid-template-columns:8fr 25fr 12fr;gap:2px;margin-top:4px;font-size:11.5px;color:var(--muted)}
+.shelf-leg span{border-top:3px solid var(--pk);padding-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.vols{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:0 18px}
+details.pit{border-top:1px solid var(--line)}
+details.pit summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;padding:12px 2px;font-weight:600}
+details.pit summary::-webkit-details-marker{display:none}
+details.pit summary::before{content:"";width:10px;height:10px;border-radius:2px;background:var(--pk)}
+details.pit summary .n{color:var(--muted);font-weight:400;font-size:13px}
+.vrow{display:flex;gap:10px;align-items:baseline;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:9px 2px}
+.vrow:hover{background:var(--hover)}
+.vrow .vn{font-variant-numeric:tabular-nums;font-weight:600;min-width:2.2em;color:var(--pk)}
+.vrow .vt{flex:1;min-width:0}
+
+.foot{margin:34px 0 calc(28px + env(safe-area-inset-bottom,0px));font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+.foot button{border:0;background:none;color:var(--accent-strong);padding:0;font-size:12.5px}
+
+/* ---------- reader ---------- */
+.reader{position:fixed;inset:0;z-index:40;background:var(--bg);overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column}
+.rd-top{position:sticky;top:0;z-index:3;background:var(--bg);display:flex;align-items:center;gap:6px;border-bottom:1px solid var(--line);
+  padding:calc(env(safe-area-inset-top,0px) + 6px) max(10px,env(safe-area-inset-right,0px)) 6px max(6px,env(safe-area-inset-left,0px))}
+.rd-title{flex:1;min-width:0;line-height:1.3}
+.rd-title b{display:block;font-family:var(--font-text);font-size:16.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rd-title span{display:block;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rd-body{flex:1;width:100%;max-width:720px;margin:0 auto;padding:4px max(18px,env(safe-area-inset-right,0px)) 40px max(18px,env(safe-area-inset-left,0px));
+  font-family:var(--font-text);font-size:var(--read-size);line-height:1.9;overflow-wrap:anywhere}
+.pgno{display:flex;align-items:center;gap:10px;color:var(--muted);font:500 12px/1 var(--font-ui);margin:22px 0 10px;font-variant-numeric:tabular-nums}
+.pgno::before,.pgno::after{content:"";flex:1;height:1px;background:var(--line)}
+.pa{margin:0 0 .5em;text-indent:1.6em}
+.pa.nc{text-indent:0}
+.hd{text-align:center;margin:1.3em 0 .25em;line-height:1.45;scroll-margin-top:80px;text-wrap:balance}
+.hd.lv1{font-size:1.2em;font-weight:600;color:var(--accent-strong)}
+.hd.lv2{font-size:.98em;font-weight:600;color:var(--muted);letter-spacing:.02em}
+.hd.lv3{font-size:1.16em;font-weight:600}
+.hd.tgt{background:var(--accent-soft);border-radius:8px}
+.hs{text-align:center;color:var(--muted);margin:0 0 .9em;font-size:.9em;line-height:1.5}
+.vs{margin:.35em 0 .75em;padding-left:1.1em;border-left:2px solid var(--line)}
+.vl{display:block}
+.fn{font-size:.8em;color:var(--muted);margin:.2em 0;line-height:1.6}
+.it{display:inline-block;font:600 .68em/1 var(--font-ui);color:var(--accent-strong);background:var(--accent-soft);border-radius:6px;padding:.3em .45em;margin-right:.4em;vertical-align:.18em;text-indent:0;scroll-margin-top:84px;font-variant-numeric:tabular-nums}
+.it.tgt{background:var(--accent);color:var(--accent-ink)}
+.ol{white-space:pre-wrap;line-height:1.75}
+.ol.i1{padding-left:1.2em} .ol.i2{padding-left:2.6em}
+.prevp{display:block;margin:14px auto 0;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 16px;font:500 13.5px var(--font-ui)}
+.rd-end{height:1px}
+.rd-load{padding:40px 0;text-align:center;font-family:var(--font-ui);color:var(--muted)}
+.rd-bar{position:sticky;bottom:0;z-index:3;background:var(--bg);border-top:1px solid var(--line);display:flex;justify-content:center;gap:2px;
+  padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
+.rd-bar button{flex:1;max-width:120px;display:flex;flex-direction:column;align-items:center;gap:2px;border:0;background:none;border-radius:10px;padding:6px 4px;font-size:12px;color:var(--ink)}
+.rd-bar button:hover{background:var(--hover)}
+.rd-bar svg{width:21px;height:21px}
+@media (min-width:1000px){
+  .reader{left:auto;width:min(780px,58vw);border-left:1px solid var(--line);box-shadow:-14px 0 40px rgb(0 0 0 / .08)}
+  body.reading .wrap{margin-left:max(0px,calc((100vw - min(780px,58vw) - 860px)/2));margin-right:0;max-width:min(860px,calc(100vw - min(780px,58vw) - 40px))}
+}
+
+/* ---------- sheet, toast ---------- */
+.sheet{position:fixed;inset:0;z-index:60;display:flex;align-items:flex-end;justify-content:center}
+.sheet-bg{position:absolute;inset:0;background:var(--scrim)}
+.sheet-panel{position:relative;width:100%;max-width:640px;max-height:86vh;display:flex;flex-direction:column;background:var(--surface);border-radius:18px 18px 0 0;padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (min-width:700px){.sheet{align-items:center}.sheet-panel{border-radius:18px;max-height:80vh}}
+.sheet-head{display:flex;align-items:center;gap:8px;padding:12px 12px 10px 18px;border-bottom:1px solid var(--line)}
+.sheet-head b{flex:1;font-family:var(--font-text);font-size:17px;line-height:1.35}
+.sheet-body{overflow-y:auto;padding:6px 18px 18px;overscroll-behavior:contain}
+.toc{display:block;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:9px 2px;color:var(--ink)}
+.toc:hover{background:var(--hover)}
+.toc .tt{font-family:var(--font-text);font-size:16px}
+.toc .ti{float:right;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;margin-left:8px}
+.toc.lv1{font-weight:600;padding-top:14px}
+.toc.lv1 .tt{color:var(--accent-strong)}
+.toc.lv2 .tt{font-weight:600;color:var(--muted);font-size:15px}
+.toc.lv3{padding-left:14px}
+.toc.cur{background:var(--accent-soft)}
+.toc small{display:block;color:var(--muted);font-size:13px;font-family:var(--font-text)}
+.field{width:100%;border:1.5px solid var(--line);background:var(--bg);border-radius:12px;padding:9px 12px;font-size:16px;margin:8px 0 6px;color:var(--ink)}
+.field:focus{outline:0;border-color:var(--accent)}
+.menu a,.menu button{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:none;padding:12px 2px;color:var(--ink);text-decoration:none;font-size:15px}
+.menu a:hover,.menu button:hover{background:var(--hover)}
+.menu small{display:block;color:var(--muted);font-size:12.5px}
+.menu svg{width:20px;height:20px;flex:none;color:var(--muted)}
+.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:6px;margin:6px 0 12px}
+.vgrid button{border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:8px 4px;font-variant-numeric:tabular-nums;border-top:3px solid var(--pk)}
+.vgrid button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink);border-top-color:var(--pk)}
+.lbl{font-size:12.5px;font-weight:600;color:var(--muted);letter-spacing:.05em;margin:14px 0 4px}
+.sizes{display:flex;gap:6px;flex-wrap:wrap}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:80;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;max-width:min(92vw,520px);box-shadow:0 6px 24px rgb(0 0 0 / .2)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="brand">
+    <h1 class="mark">หอไตร</h1>
+    <div class="brand-sub">ค้นพระไตรปิฎก ฉบับหลวง ๔๕ เล่ม<br>พร้อมบาลีสยามรัฐ</div>
+    <span class="grow"></span>
+    <button class="iconbtn" data-act="settings" aria-label="ตั้งค่าและข้อมูล"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></button>
+  </header>
+
+  <div class="sbar">
+    <form class="sbox" id="sform" role="search" autocomplete="off">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" enterkeyhint="search" placeholder="ชื่อพระสูตร ข้อความ หรือ เล่ม/ข้อ" aria-label="คำค้น">
+      <button class="iconbtn" type="button" data-act="clear" id="clearBtn" aria-label="ล้างคำค้น" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+      <button class="go" type="submit">ค้น</button>
+    </form>
+    <div class="opts">
+      <div class="seg" role="group" aria-label="ฉบับ">
+        <button type="button" data-act="ed" data-ed="th" aria-pressed="true">ฉบับหลวง (ไทย)</button>
+        <button type="button" data-act="ed" data-ed="pali" aria-pressed="false">บาลีสยามรัฐ</button>
+      </div>
+      <button type="button" class="toggle" data-act="loose" aria-pressed="false"><i></i>สะกดใกล้เคียง</button>
+    </div>
+  </div>
+
+  <div class="chips" id="scope" role="group" aria-label="ขอบเขต" style="padding-top:6px"></div>
+
+  <main id="main"></main>
+
+  <footer class="foot">
+    ข้อความพระไตรปิฎกภาษาไทย ฉบับหลวง และบาลีฉบับสยามรัฐ จากฐานข้อมูล D‑Tipitaka (ต้นฉบับ E‑Tipitaka) ·
+    เลขข้อตรงกับ 84000.org แต่เลขหน้าอาจต่างกัน · <button data-act="settings">ตั้งค่าและดาวน์โหลดเก็บไว้</button>
+  </footer>
+</div>
+
+<div class="reader" id="reader" hidden>
+  <header class="rd-top">
+    <button class="iconbtn" data-act="close" aria-label="ปิด"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <div class="rd-title"><b id="rdT">กำลังเปิด…</b><span id="rdM"></span></div>
+    <div class="seg" role="group" aria-label="ฉบับในหน้าอ่าน">
+      <button type="button" data-act="red" data-ed="th" aria-pressed="true">ไทย</button>
+      <button type="button" data-act="red" data-ed="pali" aria-pressed="false">บาลี</button>
+    </div>
+  </header>
+  <div class="rd-body" id="rdBody"></div>
+  <nav class="rd-bar" aria-label="เครื่องมืออ่าน">
+    <button data-act="toc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg>สารบัญ</button>
+    <button data-act="cite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>คัดลอกอ้างอิง</button>
+    <button data-act="ext"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>84000</button>
+    <button data-act="aa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19l5-14 5 14M5 14h6M14 19l3.5-9 3.5 9M15.2 16h4.6"/></svg>ตัวอักษร</button>
+  </nav>
+</div>
+
+<div class="sheet" id="sheet" hidden>
+  <div class="sheet-bg" data-act="sheet-close"></div>
+  <div class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="shT">
+    <div class="sheet-head"><b id="shT"></b><button class="iconbtn" data-act="sheet-close" aria-label="ปิด"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+    <div class="sheet-body" id="shB"></div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<div class="sr" id="live" aria-live="polite"></div>
+
+<script>
+/*CORE-START*/
+const TD = '๐๑๒๓๔๕๖๗๘๙';
+const thd = n => String(n).replace(/[0-9]/g, d => TD[d]);
+const ard = s => String(s).replace(/[๐-๙]/g, d => String(TD.indexOf(d)));
+const IGNC = '\\s\\-_"\'“”‘’().,?!:;…\\[\\]';
+const IGN = '[' + IGNC + ']*';
+const IGN_G = new RegExp('[' + IGNC + ']+', 'g');
+const RX_ESC = c => c.replace(/[.*+?^${}()|[\]\\\/]/g, '\\$&');
+
+function normQuery(s) {
+  return String(s)
+    .replace(/ํา/g, 'ำ')
+    .replace(/([่-๋])([ัิ-ื็])/g, '$2$1')
+    .replace(/[0-9]/g, d => TD[d]);
+}
+// Split a query into AND-terms; "quoted text" stays one term. Spacing and punctuation never matter inside a term.
+function termsOf(q) {
+  const out = []; const re = /"([^"]+)"|“([^”]+)”|(\S+)/g; let m;
+  while ((m = re.exec(q))) {
+    const t = normQuery(m[1] || m[2] || m[3]).replace(IGN_G, '');
+    if (t) out.push(t);
+  }
+  return out;
+}
+function exactSrc(t) { return [...t].map(RX_ESC).join(IGN); }
+const CONF = ['ฏฎ', 'ณน', 'ศษส', 'ฬล', 'ฑท', 'ฆค', 'ภพ', 'ฌช', 'ฐถ'];
+const CONF_OF = {}; CONF.forEach(g => [...g].forEach(c => { CONF_OF[c] = '[' + g + ']'; }));
+const MK = '[\\u0E47-\\u0E4C\\u0E3A\\u0E4D]*';
+// Loose spelling: ignore tone marks, phinthu, doubled consonants, ฏ/ฎ-type look-alikes, ธรรม/ธัมม,
+// and Thai-style Pali spelling (สังขารา ↔ สงฺขารา, อนิจจัง ↔ อนิจฺจํ).
+function looseSrc(t) {
+  t = t.replace(/[็-์]/g, '').replace(/รร/g, '\u0001').replace(/[ฺํ]/g, '')
+       .replace(/([ก-ฮ])\1+/g, '$1').replace(/ั([งม])/g, (m0, c) => (c === 'ง' ? '\u0002' : '\u0003'));
+  const cons = c => '(?:' + (CONF_OF[c] || c) + MK + '){1,2}';
+  const A = '(?:(?:รร|ั)' + MK + ')?';
+  const out = [];
+  for (const c of t) {
+    if (c === '\u0001' || c === 'ั') out.push(A);
+    else if (c === '\u0002') out.push('(?:' + A + cons('ง') + '|ํ)');
+    else if (c === '\u0003') out.push('(?:' + A + cons('ม') + '|ํ)');
+    else if (c === 'ะ') out.push('ะ?');
+    else if (c >= 'ก' && c <= 'ฮ') out.push(cons(c));
+    else out.push(RX_ESC(c) + MK);
+  }
+  return out.join(IGN);
+}
+function buildQuery(q, loose) {
+  const ts = termsOf(q);
+  const terms = ts.map(t => ({ t, len: [...t].length, src: loose ? looseSrc(t) : exactSrc(t) }));
+  const phraseSrc = terms.length > 1 ? (loose ? looseSrc(ts.join('')) : exactSrc(ts.join(''))) : null;
+  return { q, loose, terms, phraseSrc, srcs: phraseSrc ? [phraseSrc].concat(terms.map(x => x.src)) : terms.map(x => x.src) };
+}
+
+// ---- names (sutta titles) ----
+const SK_MAP = { 'ฎ': 'ฏ', 'ณ': 'น', 'ศ': 'ส', 'ษ': 'ส', 'ฬ': 'ล', 'ฑ': 'ท', 'ฒ': 'ท', 'ฆ': 'ค', 'ภ': 'พ', 'ฌ': 'ช', 'ฐ': 'ถ', 'ธ': 'ท' };
+const SUFFIX = /(สูตร|ชาดก)(ที่[๐-๙]+)?$/;
+function nameKey(s) { return normQuery(s).replace(IGN_G, '').replace(/[ๆฯ]/g, ''); }
+function skel(s) {
+  let k = nameKey(s).replace(/ที่[๐-๙]+$/, '').replace(/[๐-๙]/g, '');
+  k = k.replace(/(สูตร|ชาดก|วรรค|สังยุตต์|นิบาต|กถา|คาถา|นิทเทส|อปทาน|ปทาน|วิมาน|เปตวัตถุ|สิกขาบท)$/, '');
+  k = k.replace(/รร/g, '').replace(/[ะ-ฺเ-๎ฯ]/g, '');
+  return [...k].map(c => SK_MAP[c] || c).join('').replace(/(.)\1+/g, '$1');
+}
+function bigrams(s) { const a = [...s]; const b = new Set(); if (a.length === 1) b.add(a[0]); for (let i = 0; i + 1 < a.length; i++) b.add(a[i] + a[i + 1]); return b; }
+function dice(A, B) { if (!A.size || !B.size) return 0; let n = 0; for (const x of A) if (B.has(x)) n++; return 2 * n / (A.size + B.size); }
+
+const LVL1 = ['สังยุตต์', 'นิบาต', 'ปัณณาสก์', 'ขันธกะ', 'กัณฑ์'];
+function prepIndex(raw) {
+  const T = raw.types;
+  const E = raw.e.map((r, i) => {
+    const [v, p, l, it, pt, tc, title, num, sub, ci, code, aka] = r;
+    const t = T[tc];
+    const e = { i, v, p, l, it, pt, t, lvl: t === 'วรรค' ? 2 : (LVL1.includes(t) ? 1 : 3), title, num, sub, ctx: raw.ctx[ci] || '', code, aka: aka ? aka.split('|') : [] };
+    e.key = nameKey(title); e.key2 = e.key.replace(SUFFIX, '') || e.key;
+    e.skel = skel(title); e.bi = bigrams(e.skel);
+    e.subKey = sub ? nameKey(sub) : '';
+    e.akaKeys = e.aka.map(nameKey); e.akaSk = e.aka.map(skel); e.akaBi = e.akaSk.map(bigrams);
+    return e;
+  });
+  const byVol = new Map(), pageHeads = new Map();
+  for (const e of E) {
+    if (!byVol.has(e.v)) byVol.set(e.v, []);
+    byVol.get(e.v).push(e);
+    const k = e.v + ':' + e.p; if (!pageHeads.has(k)) pageHeads.set(k, new Map());
+    pageHeads.get(k).set(e.l, e);
+  }
+  for (const arr of byVol.values()) {
+    const l3 = arr.filter(e => e.lvl === 3);
+    for (let k = 0; k < l3.length; k++) { const e = l3[k], n = l3[k + 1]; e.span = (n && n.pt === e.pt && n.it > e.it) ? Math.min(80, n.it - e.it) : 1; }
+  }
+  return { E, byVol, pageHeads, vols: raw.vols };
+}
+// Last heading at or before (part, item) in a volume: tells which sutta a passage belongs to.
+function entryForItem(IX, v, pt, it) {
+  const arr = IX.byVol.get(v); if (!arr || !arr.length) return null;
+  const key = pt * 100000 + it;
+  let lo = 0, hi = arr.length - 1, ans = -1;
+  while (lo <= hi) { const mid = (lo + hi) >> 1; const k = arr[mid].pt * 100000 + arr[mid].it; if (k <= key) { ans = mid; lo = mid + 1; } else hi = mid - 1; }
+  return ans >= 0 ? arr[ans] : null;
+}
+function parseRef(q) {
+  const s = ard(normQuery(q)).trim().toLowerCase().replace(/\s+/g, ' ');
+  let m;
+  if ((m = s.match(/^(?:dn|ที\.?|ทีฆ|ทีฆนิกาย)\s*\.?\s*(\d{1,2})$/))) return { kind: 'code', code: 'DN ' + (+m[1]) };
+  if ((m = s.match(/^(?:mn|ม\.|มัชฌิม|มัชฌิมนิกาย)\s*\.?\s*(\d{1,3})$/))) return { kind: 'code', code: 'MN ' + (+m[1]) };
+  const vol = n => (n >= 1 && n <= 45) ? n : null;
+  if ((m = s.match(/^(?:เล่ม(?:ที่)?|ล\.)\s*(\d{1,2})\s*[,/ ]?\s*(?:ข้อ(?:ที่)?|ข\.)\s*(\d{1,5})(?:\s*[-–]\s*\d{1,5})?$/)) && vol(+m[1])) return { kind: 'item', v: +m[1], item: +m[2] };
+  if ((m = s.match(/^(\d{1,2})\s*[/:]\s*(\d{1,5})(?:\s*[-–]\s*\d{1,5})?$/)) && vol(+m[1])) return { kind: 'item', v: +m[1], item: +m[2] };
+  if ((m = s.match(/^(?:เล่ม(?:ที่)?|ล\.)\s*(\d{1,2})\s*[,/ ]?\s*(?:หน้า|น\.)\s*(\d{1,4})$/)) && vol(+m[1])) return { kind: 'page', v: +m[1], page: +m[2] };
+  if ((m = s.match(/^(?:เล่ม(?:ที่)?|ล\.)\s*(\d{1,2})$/)) && vol(+m[1])) return { kind: 'vol', v: +m[1] };
+  return null;
+}
+function nameSearch(IX, q, inScope) {
+  const ref = parseRef(q);
+  if (ref && ref.kind === 'code') return IX.E.filter(e => e.code === ref.code).map(e => ({ e, s: 2000 }));
+  const qk = nameKey(q); if ([...qk].length < 2) return [];
+  const qk2 = qk.replace(SUFFIX, '') || qk;
+  const qs = skel(q), qb = bigrams(qs), qlen = [...qk2].length;
+  const out = [];
+  for (const e of IX.E) {
+    if (inScope && !inScope(e.v)) continue;
+    let s = 0;
+    if (e.key === qk || e.key2 === qk2) s = 1000;
+    else if (e.akaKeys.some(a => a === qk || (a.replace(SUFFIX, '') || a) === qk2)) s = 960;
+    else if (e.key.startsWith(qk2)) s = 800 - Math.min(150, e.key.length - qk2.length);
+    else if (e.key.includes(qk2)) s = 650 - Math.min(150, e.key.length - qk2.length);
+    else if (e.akaKeys.some(a => a.includes(qk2))) s = 620;
+    else if (qs.length >= 2 && (e.skel.includes(qs) || e.akaSk.some(a => a.includes(qs)))) s = 480 - Math.min(80, Math.abs(e.skel.length - qs.length));
+    else if (e.subKey && qlen >= 3 && e.subKey.includes(qk2)) s = 330;
+    else if (qs.length >= 3) {
+      let d = dice(qb, e.bi); for (const b of e.akaBi) d = Math.max(d, dice(qb, b));
+      if (d >= 0.5) s = 150 + Math.round(180 * d);
+    }
+    if (s) out.push({ e, s: s + (e.lvl === 3 ? 20 : 0) + (e.t === 'สูตร' ? 10 : 0) });
+  }
+  out.sort((a, b) => b.s - a.s || a.e.i - b.e.i);
+  return out;
+}
+
+// ---- volume text ----
+function parseVol(text, ed, v) {
+  const starts = [], bodies = [], pageNo = [], items = [];
+  let i = text.indexOf('\f');
+  while (i >= 0) {
+    let nl = text.indexOf('\n', i); if (nl < 0) nl = text.length;
+    const hdr = text.slice(i + 1, nl), tab = hdr.indexOf('\t');
+    starts.push(i); bodies.push(Math.min(nl + 1, text.length));
+    pageNo.push(parseInt(hdr.slice(0, tab < 0 ? hdr.length : tab), 10)); items.push(tab < 0 ? '' : hdr.slice(tab + 1));
+    i = text.indexOf('\f', nl);
+  }
+  const mOff = [], mN = [], mPart = []; let part = 1, last = 0; const re = /\[([๐-๙]+)\]/g; let m;
+  while ((m = re.exec(text))) { const n = parseInt(ard(m[1]), 10); if (n < last - 5) part++; mOff.push(m.index); mN.push(n); mPart.push(part); last = n; }
+  return { ed, v, text, n: starts.length, starts: Int32Array.from(starts), bodies: Int32Array.from(bodies), pageNo: Int32Array.from(pageNo), items,
+    mOff: Int32Array.from(mOff), mN: Int32Array.from(mN), mPart: Uint8Array.from(mPart), parts: part };
+}
+function lastLE(arr, x) { let lo = 0, hi = arr.length - 1, ans = -1; while (lo <= hi) { const mid = (lo + hi) >> 1; if (arr[mid] <= x) { ans = mid; lo = mid + 1; } else hi = mid - 1; } return ans; }
+function pageOf(vol, off) { return Math.max(0, lastLE(vol.starts, off)); }
+function pageEnd(vol, pi) { return pi + 1 < vol.n ? vol.starts[pi + 1] : vol.text.length; }
+function pageIndexOf(vol, page) { const k = vol.pageNo.indexOf(page); return k >= 0 ? k : Math.max(0, Math.min(vol.n - 1, page - 1)); }
+function markAt(vol, off) { const k = lastLE(vol.mOff, off); return k >= 0 ? { n: vol.mN[k], pt: vol.mPart[k] } : { n: 0, pt: 1 }; }
+function findMark(vol, pt, n) {
+  for (let k = 0; k < vol.mN.length; k++) if (vol.mN[k] === n && vol.mPart[k] === pt) return k;
+  for (let k = 0; k < vol.mN.length; k++) if (vol.mN[k] === n) return k;
+  return -1;
+}
+// Find pages where every term occurs. Terms ignore spacing, line breaks and punctuation.
+function searchVol(vol, Q) {
+  const text = vol.text;
+  const anchor = Q.terms.reduce((a, b) => (b.len > a.len ? b : a));
+  const re = new RegExp(anchor.src, 'g');
+  const res = new Map(); let m;
+  while ((m = re.exec(text))) {
+    if (!m[0].length) { re.lastIndex++; continue; }
+    const pi = pageOf(vol, m.index);
+    let r = res.get(pi);
+    if (!r) { r = { v: vol.v, pi, page: vol.pageNo[pi], n: 0, off: m.index, len: m[0].length, phrase: false }; res.set(pi, r); }
+    r.n++;
+  }
+  const others = Q.terms.filter(t => t !== anchor).map(t => new RegExp(t.src));
+  const ph = Q.phraseSrc ? new RegExp(Q.phraseSrc) : null;
+  const out = [];
+  for (const r of res.values()) {
+    if (others.length || ph) {
+      const a = vol.bodies[r.pi], seg = text.slice(a, pageEnd(vol, r.pi));
+      if (others.some(rx => !rx.test(seg))) continue;
+      if (ph) { const pm = ph.exec(seg); if (pm) { r.phrase = true; r.off = a + pm.index; r.len = pm[0].length; } }
+    }
+    out.push(r);
+  }
+  return out;
+}
+function rangesIn(text, a, b, srcs) {
+  const seg = text.slice(a, b), out = [];
+  for (const src of srcs || []) {
+    const re = new RegExp(src, 'g'); let m;
+    while ((m = re.exec(seg))) { if (!m[0].length) { re.lastIndex++; continue; } out.push([a + m.index, a + m.index + m[0].length]); }
+  }
+  out.sort((x, y) => x[0] - y[0]);
+  const merged = [];
+  for (const r of out) { const L = merged[merged.length - 1]; if (L && r[0] <= L[1]) L[1] = Math.max(L[1], r[1]); else merged.push([r[0], r[1]]); }
+  return merged;
+}
+// Printed lines break mid-phrase far more often than at a space, so a line break joins without a space
+// unless punctuation or a number sits at the join.
+const SP_AFTER = /[.?!ฯ")\]:;,๐-๙0-9…”']/, SP_BEFORE = /[๐-๙0-9("“\['\tฯ]/;
+function joinGlue(prev, next) { return (SP_AFTER.test(prev || '') || SP_BEFORE.test(next || '')) ? ' ' : ''; }
+const H = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+// One-line snippet: line breaks become spaces, hyphenated breaks are joined, matches wrapped in <mark>.
+function snippetHTML(vol, r, srcs) {
+  const text = vol.text, a0 = vol.bodies[r.pi], b0 = pageEnd(vol, r.pi);
+  let a = Math.max(a0, r.off - 80), b = Math.min(b0, r.off + r.len + 120);
+  let k = a; while (k > a0 && !/\s/.test(text[k - 1]) && r.off - k < 110) k--; a = k;
+  k = b; while (k < b0 && !/\s/.test(text[k]) && k - (r.off + r.len) < 150) k++; b = k;
+  const ranges = rangesIn(text, a, b, srcs);
+  let html = a > a0 ? '… ' : '', ri = 0, open = false, sp = false;
+  for (let i = a; i < b; i++) {
+    while (ri < ranges.length && ranges[ri][1] <= i) ri++;
+    const inR = ri < ranges.length && ranges[ri][0] <= i;
+    if (inR && !open) { html += '<mark>'; open = true; } else if (!inR && open) { html += '</mark>'; open = false; }
+    const c = text[i];
+    if (c === '-' && text[i + 1] === '\n') continue;
+    if (c === '\n') { if (!sp && text[i - 1] !== '-' && joinGlue(text[i - 1], text[i + 1])) { html += ' '; sp = true; } continue; }
+    if (c === '\t' || c === ' ' || c === '\f') { if (!sp) { html += ' '; sp = true; } continue; }
+    sp = false; html += H(c);
+  }
+  if (open) html += '</mark>';
+  return html.trim() + (b < b0 ? ' …' : '');
+}
+/*CORE-END*/
+
+(() => {
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const pad2 = v => String(v).padStart(2, '0');
+const DATA = 'v1';
+const PAGES = { th: [754,717,328,304,278,328,279,517,383,261,288,430,518,413,289,288,310,402,469,290,240,407,379,333,418,447,462,318,494,331,364,428,408,339,532,188,842,731,525,818,674,466,574,659,474] };
+const SIZE_MB = { th: 5.7, pali: 4.8 };
+const ED_NAME = { th: 'ฉบับหลวง', pali: 'บาลีสยามรัฐ' };
+const SCOPES = [
+  { id: 'all', label: 'ทั้งหมด', a: 1, b: 45 }, { id: 'vin', label: 'วินัย', a: 1, b: 8 }, { id: 'sut', label: 'พระสูตร', a: 9, b: 33 },
+  { id: 'abh', label: 'อภิธรรม', a: 34, b: 45 }, { id: 'dn', label: 'ทีฆ', a: 9, b: 11 }, { id: 'mn', label: 'มัชฌิม', a: 12, b: 14 },
+  { id: 'sn', label: 'สังยุตต', a: 15, b: 19 }, { id: 'an', label: 'อังคุตตร', a: 20, b: 24 }, { id: 'kn', label: 'ขุททก', a: 25, b: 33 }];
+const FAMOUS = [[19, 1664], [17, 127], [4, 55], [10, 273], [12, 131], [14, 282], [20, 505], [25, 317], [25, 7], [10, 67]];
+const EXAMPLES = [['กาลามสูตร', 'th'], ['ธรรมจักร', 'th'], ['MN 10', 'th'], ['19/1664', 'th'], ['สังขารทั้งปวงไม่เที่ยง', 'th'], ['ภิกษุ อานาปานสติ', 'th'], ['อนิจฺจา วต สงฺขารา', 'pali']];
+const pk = v => v <= 8 ? 'vin' : v <= 33 ? 'sut' : 'abh';
+
+const LS = {
+  get(k, d) { try { const x = localStorage.getItem('hotrai:' + k); return x == null ? d : JSON.parse(x); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem('hotrai:' + k, JSON.stringify(v)); } catch (e) { /* storage unavailable */ } }
+};
+const S = {
+  ed: LS.get('ed', 'th'), scope: LS.get('scope', 'all'), custom: LS.get('custom', []), loose: false,
+  q: '', IX: null, vols: new Map(), text: null, run: 0, showNames: 6, showHits: 40, sort: null, fvol: null,
+  mode: LS.get('mode', 'flow'), size: LS.get('size', 18)
+};
+document.documentElement.style.setProperty('--read-size', S.size + 'px');
+
+// ---------- storage of downloaded volumes (per browser, optional) ----------
+let dbp = null;
+function idb() {
+  if (!dbp) dbp = new Promise((res, rej) => {
+    try { const r = indexedDB.open('hotrai', 1); r.onupgradeneeded = () => r.result.createObjectStore('gz'); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }
+    catch (e) { rej(e); }
+  });
+  return dbp;
+}
+async function idbGet(k) { try { const db = await idb(); return await new Promise(res => { const q = db.transaction('gz').objectStore('gz').get(k); q.onsuccess = () => res(q.result || null); q.onerror = () => res(null); }); } catch (e) { return null; } }
+async function idbPut(k, v) { try { const db = await idb(); await new Promise(res => { const t = db.transaction('gz', 'readwrite'); t.objectStore('gz').put(v, k); t.oncomplete = res; t.onerror = res; }); } catch (e) { /* ignore */ } }
+async function idbClear() { try { const db = await idb(); await new Promise(res => { const t = db.transaction('gz', 'readwrite'); t.objectStore('gz').clear(); t.oncomplete = res; t.onerror = res; }); } catch (e) { /* ignore */ } }
+
+let pakoP = null;
+function loadPako() {
+  if (!pakoP) pakoP = new Promise((res, rej) => { const s = document.createElement('script'); s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js'; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
+  return pakoP;
+}
+async function gunzip(buf) {
+  const u8 = new Uint8Array(buf);
+  if (!(u8[0] === 0x1f && u8[1] === 0x8b)) return u8;
+  if (typeof DecompressionStream === 'function') {
+    const st = new Blob([u8]).stream().pipeThrough(new DecompressionStream('gzip'));
+    return new Uint8Array(await new Response(st).arrayBuffer());
+  }
+  await loadPako(); return window.pako.ungzip(u8);
+}
+let dec874 = null;
+function decode874(u8) {
+  try { if (!dec874) dec874 = new TextDecoder('windows-874'); return dec874.decode(u8); }
+  catch (e) {
+    let s = ''; const CH = 8192;
+    for (let i = 0; i < u8.length; i += CH) {
+      const part = u8.subarray(i, i + CH), arr = new Array(part.length);
+      for (let j = 0; j < part.length; j++) { const b = part[j]; arr[j] = b < 0x80 ? b : (b >= 0xA1 && b <= 0xFB ? 0x0E00 + b - 0xA0 : 0x3F); }
+      s += String.fromCharCode.apply(null, arr);
+    }
+    return s;
+  }
+}
+// Data files are gzip bytes stored as base64 text (the host serves text, not archives).
+function b64bytes(s) {
+  s = s.replace(/\s+/g, '');
+  if (typeof Uint8Array.fromBase64 === 'function') return Uint8Array.fromBase64(s);
+  const bin = atob(s), u8 = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+  return u8;
+}
+async function fetchGz(path, key) {
+  let buf = await idbGet(key);
+  if (buf) return buf;
+  const r = await fetch(path);
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  buf = b64bytes(await r.text()).buffer;
+  idbPut(key, buf);
+  return buf;
+}
+const volP = new Map();
+function loadVol(ed, v) {
+  const k = ed + v;
+  if (S.vols.has(k)) return Promise.resolve(S.vols.get(k));
+  if (volP.has(k)) return volP.get(k);
+  const p = (async () => {
+    const buf = await fetchGz(`${ed}${pad2(v)}.txt`, `${DATA}/${ed}/${v}`);
+    const vol = parseVol(decode874(await gunzip(buf)), ed, v);
+    S.vols.set(k, vol);
+    return vol;
+  })();
+  volP.set(k, p);
+  p.catch(() => volP.delete(k));
+  return p;
+}
+function dropOtherEdition(ed) { for (const k of [...S.vols.keys()]) if (!k.startsWith(ed)) { S.vols.delete(k); volP.delete(k); } }
+
+async function loadIndex() {
+  const buf = await fetchGz('idx.txt', DATA + '/idx');
+  S.IX = prepIndex(JSON.parse(new TextDecoder('utf-8').decode(await gunzip(buf))));
+}
+
+// ---------- helpers ----------
+const live = $('#live');
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => { t.hidden = true; }, 2600); }
+function inScopeFn() {
+  if (S.scope === 'cus') { const set = new Set(S.custom); return set.size ? (v => set.has(v)) : (() => true); }
+  const sc = SCOPES.find(x => x.id === S.scope) || SCOPES[0];
+  return v => v >= sc.a && v <= sc.b;
+}
+function scopeVols() { const f = inScopeFn(); const out = []; for (let v = 1; v <= 45; v++) if (f(v)) out.push(v); return out; }
+function scopeLabel() {
+  if (S.scope === 'cus') { const n = S.custom.length; return n ? `${n} เล่มที่เลือก` : 'ทั้ง 45 เล่ม'; }
+  const sc = SCOPES.find(x => x.id === S.scope); return sc.id === 'all' ? 'ทั้ง 45 เล่ม' : `${sc.label} (เล่ม ${sc.a}–${sc.b})`;
+}
+function volName(v) { return S.IX ? S.IX.vols[v - 1] : ''; }
+function vtag(v) { return `<span class="vtag pk-${pk(v)}">เล่ม ${v}</span>`; }
+function entryLine(e) { return (e.num ? `<span class="no">${H(e.num)}.</span>` : '') + H(e.title); }
+function typeLabel(t) { return ({ 'สูตร': 'พระสูตร', 'วรรค': 'วรรค', 'ชาดก': 'ชาดก', 'เรื่อง': 'เรื่อง' })[t] || t; }
+const ICON_GO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>';
+
+// ---------- scope chips ----------
+function renderScope() {
+  $('#scope').innerHTML = SCOPES.map(s => `<button class="chip" data-act="scope" data-id="${s.id}" aria-pressed="${S.scope === s.id}">${s.label}</button>`).join('') +
+    `<button class="chip" data-act="pickvols" aria-pressed="${S.scope === 'cus'}">${S.scope === 'cus' && S.custom.length ? 'เลือกไว้ ' + S.custom.length + ' เล่ม' : 'เลือกเล่ม…'}</button>`;
+}
+function renderEd() {
+  $$('[data-act="ed"]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.ed === S.ed)));
+  $('[data-act="loose"]').setAttribute('aria-pressed', String(S.loose));
+}
+
+// ---------- home ----------
+function shelfHTML(values, active, act) {
+  const max = Math.max(1, ...values.map(x => x || 0));
+  let h = '<div class="shelf" role="group" aria-label="ชั้นพระไตรปิฎก ๔๕ เล่ม">';
+  for (let v = 1; v <= 45; v++) {
+    const x = values[v - 1] || 0, pct = x ? Math.max(8, Math.round(Math.sqrt(x / max) * 100)) : 4;
+    h += `<button class="pk-${pk(v)}${x ? '' : ' z'}" style="--pk:var(--${pk(v)});--h:${pct}%" data-act="${act}" data-v="${v}" aria-pressed="${active === v}" title="เล่ม ${v}${x ? ' · ' + x : ''}" aria-label="เล่ม ${v} ${volName(v)}${x ? ' พบ ' + x : ''}"><span></span></button>`;
+  }
+  h += '</div><div class="shelf-leg"><span style="--pk:var(--vin)">วินัย ๑–๘</span><span style="--pk:var(--sut)">พระสูตร ๙–๓๓</span><span style="--pk:var(--abh)">อภิธรรม ๓๔–๔๕</span></div>';
+  return h;
+}
+function famousRows() {
+  if (!S.IX) return '';
+  const rows = [];
+  for (const [v, it] of FAMOUS) {
+    const e = S.IX.E.find(x => x.v === v && x.it === it && x.lvl === 3); if (!e) continue;
+    rows.push(nameRow(e));
+  }
+  return `<ul class="list">${rows.join('')}</ul>`;
+}
+function renderHome() {
+  const last = LS.get('last', null), recent = LS.get('recent', []);
+  let h = '';
+  if (last && last.v) {
+    h += `<button class="jump" data-act="resume"><span class="grow"><small>อ่านต่อจากครั้งก่อน · ${ED_NAME[last.ed] || ''}</small><b>${H(last.title || 'เล่ม ' + last.v)}</b><small>เล่ม ${last.v} · ข้อ ${last.item}</small></span>${ICON_GO}</button>`;
+  }
+  h += `<section class="sec"><h2 class="sec-h">ลองค้น</h2><div class="chips">${EXAMPLES.map(([q, ed]) => `<button class="chip" data-act="example" data-q="${H(q)}" data-ed="${ed}">${H(q)}${ed === 'pali' ? '<span class="n">บาลี</span>' : ''}</button>`).join('')}</div>`;
+  if (recent.length) h += `<div class="chips" style="margin-top:8px">${recent.map(q => `<button class="chip" data-act="example" data-q="${H(q)}"><span class="n" style="margin:0 4px 0 0">ล่าสุด</span>${H(q)}</button>`).join('')}</div>`;
+  h += `</section>`;
+  h += `<section class="sec"><h2 class="sec-h">พระสูตรที่มักค้นหา</h2>${S.IX ? famousRows() : '<p class="note">กำลังโหลดดัชนีพระสูตร…</p>'}</section>`;
+  h += `<section class="sec"><h2 class="sec-h">ชั้นพระไตรปิฎก <span class="grow"></span><span style="letter-spacing:0;font-weight:400">ความสูงตามจำนวนหน้า · แตะเพื่อดูสารบัญ</span></h2>${shelfHTML(PAGES.th, null, 'vol')}`;
+  const groups = [['vin', 'พระวินัยปิฎก', 1, 8, false], ['sut', 'พระสุตตันตปิฎก', 9, 33, true], ['abh', 'พระอภิธรรมปิฎก', 34, 45, false]];
+  h += groups.map(([k, label, a, b, open]) => `<details class="pit" style="--pk:var(--${k})"${open ? ' open' : ''}><summary>${label} <span class="n">เล่ม ${a}–${b}</span></summary><div class="vols">${
+    Array.from({ length: b - a + 1 }, (_, i) => a + i).map(v => `<button class="vrow" style="--pk:var(--${k})" data-act="vol" data-v="${v}"><span class="vn">${v}</span><span class="vt">${H(volName(v) || '…')}</span></button>`).join('')
+  }</div></details>`).join('');
+  h += `</section>`;
+  $('#main').innerHTML = h;
+}
+
+// ---------- results ----------
+function nameRow(e) {
+  const seen = new Set([e.skel]), names = [];
+  e.aka.forEach((a, k) => { if (names.length < 2 && !seen.has(e.akaSk[k])) { seen.add(e.akaSk[k]); names.push(a); } });
+  const aka = names.length ? `<div class="aka">รู้จักในชื่อ ${H(names.join(', '))}</div>` : '';
+  return `<li><button class="row" data-act="open-entry" data-i="${e.i}">
+    <div class="t1">${entryLine(e)}${e.code ? `<span class="tag code">${e.code}</span>` : ''}<span class="tag">${typeLabel(e.t)}</span></div>
+    ${aka}${e.sub ? `<div class="sub">${H(e.sub)}</div>` : ''}
+    <div class="loc">${vtag(e.v)}<span>${H(volName(e.v))}${e.ctx ? ' › ' + H(e.ctx) : ''}</span><span>ข้อ ${e.it}</span></div>
+  </button></li>`;
+}
+function refCard(ref) {
+  if (!ref) return '';
+  if (ref.kind === 'item') return `<button class="jump" data-act="goref"><span class="grow"><small>ไปที่ตำแหน่ง · ${ED_NAME[S.ed]}</small><b>เล่ม ${ref.v} ข้อ ${ref.item}</b><small>${H(volName(ref.v))}</small></span>${ICON_GO}</button>`;
+  if (ref.kind === 'page') return `<button class="jump" data-act="goref"><span class="grow"><small>ไปที่หน้า · ${ED_NAME[S.ed]}</small><b>เล่ม ${ref.v} หน้า ${ref.page}</b><small>${H(volName(ref.v))}</small></span>${ICON_GO}</button>`;
+  if (ref.kind === 'vol') return `<button class="jump" data-act="vol" data-v="${ref.v}"><span class="grow"><small>เปิดสารบัญ</small><b>เล่ม ${ref.v}</b><small>${H(volName(ref.v))}</small></span>${ICON_GO}</button>`;
+  return '';
+}
+function textKey() { return [S.q.trim(), S.ed, S.scope, S.custom.join(','), S.loose].join('|'); }
+function renderResults() {
+  const q = S.q.trim();
+  if (!q) { renderHome(); return; }
+  const ref = parseRef(q);
+  let h = refCard(ref);
+  // names
+  if (S.IX) {
+    const names = nameSearch(S.IX, q, ref && ref.kind === 'code' ? null : inScopeFn());
+    if (names.length) {
+      const shown = names.slice(0, S.showNames);
+      h += `<section class="sec"><h2 class="sec-h">ชื่อพระสูตรและหัวข้อ <span class="num">${names.length}</span><span class="grow"></span>${names.length > S.showNames ? `<button data-act="more-names">แสดงทั้งหมด</button>` : ''}</h2><ul class="list">${shown.map(x => nameRow(x.e)).join('')}</ul></section>`;
+    } else if (!ref) {
+      h += `<p class="note" style="margin-top:16px">ไม่พบชื่อพระสูตรที่ตรงกับ “${H(q)}” ${S.scope !== 'all' ? 'ใน' + H(scopeLabel()) : ''}</p>`;
+    }
+  } else h += '<p class="note">กำลังโหลดดัชนีพระสูตร…</p>';
+  // text
+  h += `<section class="sec" id="textsec">${textSectionHTML()}</section>`;
+  $('#main').innerHTML = h;
+}
+function textSectionHTML() {
+  const q = S.q.trim();
+  const T = S.text;
+  const head = `<h2 class="sec-h">พบในเนื้อความ · ${ED_NAME[S.ed]}</h2>`;
+  if (!T || T.key !== textKey()) {
+    if (!termsOf(q).length || [...termsOf(q).join('')].length < 2) return head + '<p class="note">พิมพ์อย่างน้อย 2 ตัวอักษรเพื่อค้นในเนื้อความ</p>';
+    const loaded = scopeVols().filter(v => S.vols.has(S.ed + v)).length, total = scopeVols().length;
+    return head + `<div class="runbox"><button class="go" data-act="run">ค้นข้อความ “${H(q.length > 40 ? q.slice(0, 40) + '…' : q)}”</button>
+      <span class="status">${H(scopeLabel())}${loaded < total ? ` · ครั้งแรกจะดาวน์โหลดข้อมูลราว ${(SIZE_MB[S.ed] * (total - loaded) / 45).toFixed(1)} MB แล้วเก็บไว้ในเครื่อง` : ''}</span>
+      <span class="status">เคาะเว้นวรรคระหว่างคำ = ต้องพบทุกคำในหน้าเดียวกัน · ใส่ "อัญประกาศ" = ค้นทั้งวลี</span></div>`;
+  }
+  if (T.status === 'loading') {
+    return head + `<div class="runbox"><span class="status">กำลังค้น… เล่ม ${T.curV || ''} (${T.done}/${T.total})</span><div class="prog"><i style="width:${Math.round(100 * T.done / Math.max(1, T.total))}%"></i></div></div>`;
+  }
+  if (T.status === 'error') return head + `<div class="alert">โหลดข้อมูลไม่สำเร็จ (${H(T.err)}) ตรวจสอบอินเทอร์เน็ตแล้วลองใหม่</div><button class="more" data-act="run">ลองใหม่</button>`;
+  // done
+  const res = T.results;
+  if (!res.length) return head + `<div class="alert">ไม่พบ “${H(q)}” ใน${H(scopeLabel())}${T.autoLoose || S.loose ? ' แม้ค้นแบบสะกดใกล้เคียงแล้ว' : ''} ลองตัดคำให้สั้นลง หรือเปลี่ยนขอบเขต</div>`;
+  const perVol = new Array(45).fill(0); let hits = 0;
+  for (const r of res) { perVol[r.v - 1]++; hits += r.n; }
+  const volsHit = perVol.filter(Boolean).length;
+  const list = S.fvol ? res.filter(r => r.v === S.fvol) : res;
+  const sort = S.sort || (T.Q.terms.length > 1 ? 'rel' : 'canon');
+  const sorted = list.slice().sort(sort === 'rel' ? ((a, b) => (b.phrase - a.phrase) || (b.n - a.n) || (a.v - b.v) || (a.pi - b.pi)) : ((a, b) => (a.v - b.v) || (a.pi - b.pi)));
+  const shown = sorted.slice(0, S.showHits);
+  let h = head;
+  if (T.autoLoose) h += `<div class="alert">ไม่พบแบบตรงตัว จึงแสดงผลที่สะกดใกล้เคียง</div>`;
+  h += `<p class="note num" style="margin-top:0">พบ <b style="color:var(--ink)">${res.length.toLocaleString()}</b> หน้า · ${hits.toLocaleString()} ตำแหน่ง · ใน ${volsHit} เล่ม${S.fvol ? ` · <b style="color:var(--ink)">กรองเฉพาะเล่ม ${S.fvol}</b> <button class="chip" data-act="fvol" data-v="${S.fvol}" style="padding:2px 10px">ดูทุกเล่ม</button>` : ' · แตะแท่งเพื่อกรองเล่ม'}</p>`;
+  h += shelfHTML(perVol, S.fvol, 'fvol');
+  h += `<div class="opts" style="padding-top:14px"><div class="seg" role="group" aria-label="เรียงผล"><button data-act="sort" data-s="canon" aria-pressed="${sort === 'canon'}">ตามลำดับเล่ม</button><button data-act="sort" data-s="rel" aria-pressed="${sort === 'rel'}">ตรงที่สุดก่อน</button></div></div>`;
+  h += `<ul class="list" style="margin-top:10px">${shown.map(r => hitRow(r, T)).join('')}</ul>`;
+  if (sorted.length > shown.length) h += `<button class="more" data-act="more-hits">แสดงเพิ่ม (${(sorted.length - shown.length).toLocaleString()} หน้า)</button>`;
+  return h;
+}
+function hitRow(r, T) {
+  const vol = S.vols.get(T.ed + r.v);
+  if (!vol) return '';
+  const mk = markAt(vol, r.off);
+  const e = entryForItem(S.IX, r.v, mk.pt, mk.n);
+  const ctx = e ? `<span class="ctx">${entryLine(e)}</span>` : '';
+  return `<li><button class="row" data-act="open-hit" data-v="${r.v}" data-pi="${r.pi}" data-off="${r.off}">
+    <div class="loc" style="margin:0 0 2px">${vtag(r.v)}${ctx}${r.phrase ? '<span class="tag ph">ตรงทั้งวลี</span>' : ''}</div>
+    <p class="snip">${snippetHTML(vol, r, T.Q.srcs)}</p>
+    <div class="loc"><span>ข้อ ${mk.n || '–'}</span><span>หน้า ${r.page}</span>${r.n > 1 ? `<span>พบ ${r.n} แห่งในหน้านี้</span>` : ''}</div>
+  </button></li>`;
+}
+function updateTextSection() { const el = $('#textsec'); if (el) el.innerHTML = textSectionHTML(); }
+
+async function runText() {
+  const q = S.q.trim(); if (!q) return;
+  const key = textKey(), run = ++S.run;
+  const vols = scopeVols();
+  const Q = buildQuery(q, S.loose);
+  if (!Q.terms.length) return;
+  S.fvol = null; S.sort = null; S.showHits = 40;
+  S.text = { key, q, ed: S.ed, Q, status: 'loading', results: [], done: 0, total: vols.length, autoLoose: false };
+  saveRecent(q);
+  updateTextSection();
+  try {
+    for (const v of vols) {
+      if (run !== S.run) return;
+      S.text.curV = v;
+      const vol = await loadVol(S.ed, v);
+      if (run !== S.run) return;
+      S.text.results.push(...searchVol(vol, Q));
+      S.text.done++;
+      updateTextSection();
+      await new Promise(r => setTimeout(r, 0));
+    }
+    if (!S.text.results.length && !S.loose) {
+      const Q2 = buildQuery(q, true);
+      for (const v of vols) { if (run !== S.run) return; S.text.results.push(...searchVol(S.vols.get(S.ed + v), Q2)); }
+      if (S.text.results.length) { S.text.Q = Q2; S.text.autoLoose = true; }
+    }
+    S.text.status = 'done';
+    live.textContent = `พบ ${S.text.results.length} หน้า`;
+  } catch (err) {
+    if (run !== S.run) return;
+    S.text.status = 'error'; S.text.err = err.message || String(err);
+  }
+  updateTextSection();
+}
+function saveRecent(q) { const r = LS.get('recent', []).filter(x => x !== q); r.unshift(q); LS.set('recent', r.slice(0, 6)); }
+
+// ---------- reader ----------
+const R = { open: false };
+const rdBody = $('#rdBody');
+function headsFor(vol, page) { return (vol.ed === 'th' && S.IX) ? (S.IX.pageHeads.get(vol.v + ':' + page) || null) : null; }
+function seg(text, a, b, ranges, vol) {
+  let html = '', last = a; const re = /\[([๐-๙]+)\]/g; re.lastIndex = 0;
+  const s = text.slice(a, b); let m;
+  while ((m = re.exec(s))) {
+    html += marked(text, last, a + m.index, ranges);
+    const mk = markAt(vol, a + m.index);
+    html += `<span class="it" data-it="${mk.n}" data-pt="${mk.pt}">${m[1]}</span>`;
+    last = a + m.index + m[0].length;
+  }
+  return html + marked(text, last, b, ranges);
+}
+function marked(text, a, b, ranges) {
+  if (a >= b) return '';
+  let html = '', i = a;
+  for (const [s, e] of ranges) {
+    if (e <= i) continue; if (s >= b) break;
+    const ss = Math.max(s, i), ee = Math.min(e, b);
+    html += H(text.slice(i, ss)) + '<mark>' + H(text.slice(ss, ee)) + '</mark>'; i = ee;
+  }
+  return html + H(text.slice(i, b));
+}
+function pageHTML(vol, pi) {
+  const text = vol.text, a0 = vol.bodies[pi], b0 = pageEnd(vol, pi), pg = vol.pageNo[pi];
+  const ranges = R.hl && R.hl.length ? rangesIn(text, a0, b0, R.hl) : [];
+  const L = []; let s = a0;
+  for (;;) { let e = text.indexOf('\n', s); if (e < 0 || e > b0) e = b0; L.push([s, e]); if (e >= b0) break; s = e + 1; }
+  const heads = headsFor(vol, pg);
+  const C = L.map(([s, e], li) => {
+    if (s >= e) return { t: 'blank' };
+    let cs = s, ind = 0; if (text[cs] === '\t') { ind = 1; cs++; if (text[cs] === '\t') { ind = 2; cs++; } }
+    const h = heads && heads.get(li);
+    if (h) return { t: 'head', h, cs, e, li };
+    if (text[cs] === '#') return { t: 'note', cs, e, li };
+    if (/^[_\-–—.\s]+$/.test(text.slice(cs, e))) return { t: 'blank' };
+    return { t: ind === 2 ? 'verse' : ind === 1 ? 'para' : 'cont', cs, e, li, ind };
+  });
+  for (let i = C.length - 1; i >= 0; i--) {
+    if (C[i].t !== 'verse') continue;
+    let j = i + 1; while (j < C.length && C[j].t === 'blank') j++;
+    const nx = C[j];
+    if ((nx && nx.t === 'cont') || (text[C[i].cs] === '[' && !(nx && nx.t === 'verse'))) C[i].t = 'para';
+  }
+  C.forEach((c, li) => {
+    if (c.t !== 'head' || !c.h.sub) return;
+    for (let j = li + 1; j <= li + 3 && j < C.length; j++) {
+      const cj = C[j]; if (cj.t === 'blank') continue; if (cj.t === 'head') break;
+      if (text.slice(cj.cs, cj.e).replace(/\s+/g, ' ').trim() === c.h.sub) { cj.t = 'sub'; break; }
+    }
+  });
+  let html = `<section class="pg" data-pi="${pi}"><div class="pgno"><span>หน้า ${pg}</span></div>`;
+  if (S.mode === 'lines') {
+    for (const c of C) html += c.t === 'blank' ? '<div class="ol">&nbsp;</div>' : `<div class="ol i${c.ind || (c.t === 'head' ? 2 : 0)}">${seg(text, c.cs, c.e, ranges, vol)}</div>`;
+    return html + '</section>';
+  }
+  let para = null;
+  const flush = () => {
+    if (!para) return;
+    let h = '';
+    para.p.forEach((x, k) => {
+      let e = x[1], glue = k < para.p.length - 1 ? joinGlue(text[e - 1], text[para.p[k + 1][0]]) : '';
+      if (k < para.p.length - 1 && text[e - 1] === '-') { e--; glue = ''; }
+      h += seg(text, x[0], e, ranges, vol) + (k < para.p.length - 1 ? glue : '');
+    });
+    html += `<p class="${para.c}">${h}</p>`; para = null;
+  };
+  for (let i = 0; i < C.length; i++) {
+    const c = C[i];
+    if (c.t === 'blank') { flush(); continue; }
+    if (c.t === 'head') { flush(); html += `<h3 class="hd lv${c.h.lvl}" id="h-${pg}-${c.li}" data-i="${c.h.i}">${seg(text, c.cs, c.e, ranges, vol)}</h3>`; continue; }
+    if (c.t === 'sub') { flush(); html += `<p class="hs">${seg(text, c.cs, c.e, ranges, vol)}</p>`; continue; }
+    if (c.t === 'note') { flush(); html += `<p class="fn">${seg(text, c.cs, c.e, ranges, vol)}</p>`; continue; }
+    if (c.t === 'verse') {
+      flush(); let h = '', j = i;
+      while (j < C.length && C[j].t === 'verse') { h += `<span class="vl">${seg(text, C[j].cs, C[j].e, ranges, vol)}</span>`; j++; }
+      html += `<div class="vs">${h}</div>`; i = j - 1; continue;
+    }
+    if (c.t === 'para') { flush(); para = { c: 'pa', p: [[c.cs, c.e]] }; continue; }
+    if (!para) para = { c: 'pa nc', p: [] };
+    para.p.push([c.cs, c.e]);
+  }
+  flush();
+  return html + '</section>';
+}
+function prevBtn() { return R.first > 0 ? `<button class="prevp" data-act="prev">อ่านหน้าก่อนหน้า (หน้า ${R.vol.pageNo[R.first - 1]})</button>` : ''; }
+function renderReader() {
+  let h = prevBtn();
+  for (let pi = R.first; pi <= R.last; pi++) h += pageHTML(R.vol, pi);
+  h += R.last < R.vol.n - 1 ? '<div class="rd-end" id="rdEnd"></div>' : '<p class="rd-load">จบเล่ม</p>';
+  rdBody.innerHTML = h;
+  observeEnd();
+}
+let endObs = null;
+function observeEnd() {
+  if (endObs) endObs.disconnect();
+  const el = $('#rdEnd'); if (!el || typeof IntersectionObserver !== 'function') return;
+  endObs = new IntersectionObserver(ents => { if (ents.some(x => x.isIntersecting)) appendPage(); }, { root: $('#reader'), rootMargin: '900px 0px' });
+  endObs.observe(el);
+}
+function appendPage() {
+  if (!R.open || R.last >= R.vol.n - 1) return;
+  R.last++;
+  const end = $('#rdEnd');
+  end.insertAdjacentHTML('beforebegin', pageHTML(R.vol, R.last));
+  if (R.last >= R.vol.n - 1) { end.outerHTML = '<p class="rd-load">จบเล่ม</p>'; if (endObs) endObs.disconnect(); }
+}
+function prependPage() {
+  if (R.first <= 0) return;
+  const rd = $('#reader'), before = rd.scrollHeight, top = rd.scrollTop;
+  R.first--;
+  const btn = $('.prevp', rdBody); if (btn) btn.remove();
+  rdBody.insertAdjacentHTML('afterbegin', prevBtn() + pageHTML(R.vol, R.first));
+  rd.scrollTop = top + (rd.scrollHeight - before);
+}
+function scrollToEl(el) {
+  if (!el) return;
+  const rd = $('#reader'), top = $('.rd-top').getBoundingClientRect().height;
+  rd.scrollTop = Math.max(0, el.getBoundingClientRect().top - rd.getBoundingClientRect().top + rd.scrollTop - top - 18);
+}
+async function openReader(o) {
+  const ed = o.ed || S.ed;
+  const rd = $('#reader');
+  if (!R.open) { rd.hidden = false; document.body.classList.add('reading'); R.open = true; pushHist(); }
+  $('#rdT').textContent = 'กำลังเปิด…'; $('#rdM').textContent = '';
+  rdBody.innerHTML = '<p class="rd-load">กำลังโหลดเล่ม ' + o.v + '…</p>';
+  $$('[data-act="red"]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.ed === ed)));
+  let vol;
+  try { vol = await loadVol(ed, o.v); } catch (e) { rdBody.innerHTML = `<div class="alert">โหลดเล่ม ${o.v} ไม่สำเร็จ (${H(e.message)}) <button class="more" data-act="retry-open">ลองใหม่</button></div>`; R.retry = o; return; }
+  let pi = 0, target = null;
+  if (o.item != null) {
+    const k = findMark(vol, o.pt || 1, o.item);
+    if (k >= 0) { pi = pageOf(vol, vol.mOff[k]); target = { item: o.item, pt: vol.mPart[k] }; }
+    else toast(`ไม่พบข้อ ${o.item} ในเล่ม ${o.v} ของ${ED_NAME[ed]}`);
+  } else if (o.page != null) { pi = pageIndexOf(vol, o.page); if (o.line != null) target = { head: `h-${o.page}-${o.line}` }; }
+  else if (o.pi != null) { pi = o.pi; if (o.off != null) target = { off: o.off }; }
+  Object.assign(R, { ed, v: o.v, vol, first: pi, last: Math.min(vol.n - 1, pi + 1), hl: o.hl || null, item: null, pt: 1, cur: pi });
+  renderReader();
+  const sec = $(`.pg[data-pi="${pi}"]`, rdBody);
+  let el = null;
+  if (target && target.item != null) { el = $(`.it[data-it="${target.item}"][data-pt="${target.pt}"]`, sec) || $(`.it[data-it="${target.item}"]`, sec); if (el) el.classList.add('tgt'); }
+  else if (target && target.head) { el = document.getElementById(target.head); if (el) el.classList.add('tgt'); }
+  else if (target && target.off != null) { el = $('mark', sec); }
+  requestAnimationFrame(() => { scrollToEl(el || sec); trackPos(); });
+}
+function closeReader(fromPop) {
+  if (!R.open) return;
+  R.open = false; $('#reader').hidden = true; document.body.classList.remove('reading');
+  if (endObs) endObs.disconnect();
+  if (!fromPop) { try { if (history.state && history.state.hotrai) history.back(); } catch (e) { /* ignore */ } }
+  if (!S.q.trim()) renderHome();
+}
+function pushHist() { try { history.pushState({ hotrai: 1 }, ''); } catch (e) { /* ignore */ } }
+window.addEventListener('popstate', () => { if ($('#sheet').hidden === false) { closeSheet(); } if (R.open) closeReader(true); });
+
+let trackRaf = 0;
+$('#reader').addEventListener('scroll', () => { if (!trackRaf) trackRaf = requestAnimationFrame(() => { trackRaf = 0; trackPos(); }); }, { passive: true });
+function trackPos() {
+  if (!R.open || !R.vol) return;
+  const topY = $('.rd-top').getBoundingClientRect().bottom + 10;
+  const secs = $$('.pg', rdBody); if (!secs.length) return;
+  let cur = secs[0];
+  for (const s of secs) { if (s.getBoundingClientRect().bottom > topY) { cur = s; break; } }
+  const pi = +cur.dataset.pi; let it = null;
+  for (const x of $$('.it, .hd', cur)) { if (x.getBoundingClientRect().top <= topY + 80) it = x; else break; }
+  let mk, e = null;
+  if (it && it.classList.contains('hd') && S.IX) { e = S.IX.E[+it.dataset.i]; mk = { n: e.it, pt: e.pt }; }
+  else if (it) mk = { n: +it.dataset.it, pt: +it.dataset.pt };
+  else mk = markAt(R.vol, R.vol.bodies[pi]);
+  if (!mk.n) { const k = Array.prototype.findIndex.call(R.vol.mOff, o => o >= R.vol.bodies[pi]); if (k >= 0) mk = { n: R.vol.mN[k], pt: R.vol.mPart[k] }; }
+  R.cur = pi; R.item = mk.n; R.pt = mk.pt;
+  if (!e && S.IX) e = entryForItem(S.IX, R.v, mk.pt, mk.n);
+  R.entry = e;
+  $('#rdT').textContent = e ? (e.num ? e.num + '. ' : '') + e.title : volName(R.v);
+  $('#rdM').textContent = `${ED_NAME[R.ed]} · เล่ม ${R.v} · หน้า ${R.vol.pageNo[pi]}${mk.n ? ' · ข้อ ' + mk.n : ''}${e && e.code ? ' · ' + e.code : ''}`;
+  clearTimeout(trackPos.t);
+  trackPos.t = setTimeout(() => LS.set('last', { ed: R.ed, v: R.v, item: R.item, pt: R.pt, title: $('#rdT').textContent }), 400);
+}
+// remember a selection made inside the reader so "คัดลอกอ้างอิง" can quote it even after the tap clears it
+let lastSel = { text: '', t: 0 };
+document.addEventListener('selectionchange', () => {
+  const sel = window.getSelection(); if (!sel || sel.isCollapsed || !R.open) return;
+  const node = sel.anchorNode && (sel.anchorNode.nodeType === 1 ? sel.anchorNode : sel.anchorNode.parentElement);
+  if (node && rdBody.contains(node)) lastSel = { text: sel.toString().replace(/\s+/g, ' ').trim(), t: Date.now() };
+});
+function citation() {
+  const e = R.entry;
+  const name = e && e.lvl === 3 ? e.title + ' ' : '';
+  return `${name}(${R.ed === 'th' ? 'พระไตรปิฎก ฉบับหลวง' : 'พระไตรปิฎกบาลี ฉบับสยามรัฐ'} เล่ม ${thd(R.v)} ข้อ ${thd(R.item || 0)})`;
+}
+async function copyText(t) {
+  try { await navigator.clipboard.writeText(t); return true; }
+  catch (e) {
+    const ta = document.createElement('textarea'); ta.value = t; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select();
+    let ok = false; try { ok = document.execCommand('copy'); } catch (er) { ok = false; } ta.remove(); return ok;
+  }
+}
+function link84000() {
+  if (!R.item) return null;
+  if (R.pt > 1) return 'part';
+  const e = R.entry, it = R.item;
+  const n = e && e.lvl === 3 && e.it === it ? e.span : 1;
+  return {
+    th: `https://84000.org/tipitaka/read/byitem_s.php?book=${R.v}&item=${it}&items=${n}`,
+    pali: `https://84000.org/tipitaka/read/pali_item_s.php?book=${R.v}&item=${it}&items=${n}`,
+    roman: `https://84000.org/tipitaka/read/roman_item_s.php?book=${R.v}&item=${it}&items=${n}`,
+    attha: `https://84000.org/tipitaka/attha/attha.php?b=${R.v}&i=${it}`
+  };
+}
+
+// ---------- sheets ----------
+function openSheet(title, body) { $('#shT').textContent = title; $('#shB').innerHTML = body; $('#sheet').hidden = false; $('#shB').scrollTop = 0; }
+function closeSheet() { $('#sheet').hidden = true; }
+function tocRows(v, filter) {
+  const arr = (S.IX && S.IX.byVol.get(v)) || [];
+  const f = filter ? nameKey(filter) : '';
+  const rows = arr.filter(e => !f || e.key.includes(f) || (e.subKey && e.subKey.includes(f)) || e.akaKeys.some(a => a.includes(f)));
+  if (!arr.length) return `<p class="note">เล่มนี้ไม่มีหัวข้อพระสูตรในดัชนี</p><button class="more" data-act="open-page" data-v="${v}" data-p="1">เปิดอ่านตั้งแต่หน้าแรก</button>`;
+  if (!rows.length) return '<p class="note">ไม่พบหัวข้อที่ตรงกับคำกรอง</p>';
+  const cur = R.open && R.v === v && R.entry ? R.entry.i : -1;
+  return rows.slice(0, 900).map(e => `<button class="toc lv${e.lvl}${e.i === cur ? ' cur' : ''}" data-act="open-entry" data-i="${e.i}" ${e.i === cur ? 'id="tocCur"' : ''}><span class="ti">ข้อ ${e.it}</span><span class="tt">${entryLine(e)}</span>${e.code ? ` <span class="tag code">${e.code}</span>` : ''}${e.sub && e.lvl === 3 ? `<small>${H(e.sub)}</small>` : ''}</button>`).join('') +
+    (rows.length > 900 ? `<p class="note">แสดง 900 รายการแรก พิมพ์คำกรองเพื่อหาเพิ่ม</p>` : '');
+}
+function openToc(v) {
+  if (!S.IX) { toast('กำลังโหลดดัชนี…'); return; }
+  openSheet(`สารบัญ เล่ม ${v} · ${volName(v)}`, `<input class="field" id="tocF" type="search" placeholder="กรองชื่อในเล่มนี้" aria-label="กรองชื่อในเล่มนี้"><div id="tocL">${tocRows(v, '')}</div>`);
+  $('#tocF').dataset.v = v;
+  const c = $('#tocCur'); if (c) c.scrollIntoView({ block: 'center' });
+}
+function openPickVols() {
+  const sel = new Set(S.custom);
+  const grid = (a, b, k) => `<div class="vgrid">${Array.from({ length: b - a + 1 }, (_, i) => a + i).map(v => `<button style="--pk:var(--${k})" data-act="pv" data-v="${v}" aria-pressed="${sel.has(v)}" title="${H(volName(v))}">${v}</button>`).join('')}</div>`;
+  openSheet('เลือกเล่มที่จะค้น', `<p class="note">แตะเลขเล่มเพื่อเลือกหรือเอาออก แล้วกด “ใช้ขอบเขตนี้”</p>
+    <div class="lbl">พระวินัยปิฎก</div>${grid(1, 8, 'vin')}<div class="lbl">พระสุตตันตปิฎก</div>${grid(9, 33, 'sut')}<div class="lbl">พระอภิธรรมปิฎก</div>${grid(34, 45, 'abh')}
+    <div class="chips"><button class="go" data-act="pv-apply">ใช้ขอบเขตนี้</button><button class="chip" data-act="pv-clear">ล้างที่เลือก</button></div>`);
+}
+function openSettings() {
+  const sizes = [16, 18, 20, 22, 24];
+  openSheet('ตั้งค่าและข้อมูล', `
+    <div class="lbl">ขนาดตัวอักษรในหน้าอ่าน</div><div class="sizes">${sizes.map(s => `<button class="chip" data-act="size" data-s="${s}" aria-pressed="${S.size === s}">${s}</button>`).join('')}</div>
+    <div class="lbl">การจัดบรรทัด</div><div class="seg"><button data-act="mode" data-m="flow" aria-pressed="${S.mode === 'flow'}">จัดย่อหน้าให้อ่านง่าย</button><button data-act="mode" data-m="lines" aria-pressed="${S.mode === 'lines'}">ตามบรรทัดต้นฉบับ</button></div>
+    <div class="lbl">ใช้งานออฟไลน์</div>
+    <p class="note">ดาวน์โหลดทุกเล่มเก็บไว้ในเบราว์เซอร์นี้ ค้นได้ทันทีแม้เน็ตช้า</p>
+    <div class="chips"><button class="chip" data-act="dl" data-ed="th">ฉบับหลวง ${SIZE_MB.th} MB</button><button class="chip" data-act="dl" data-ed="pali">บาลีสยามรัฐ ${SIZE_MB.pali} MB</button><button class="chip" data-act="clearcache">ล้างข้อมูลที่เก็บไว้</button></div>
+    <p class="status" id="dlStatus"></p>
+    <div class="lbl">เกี่ยวกับข้อมูล</div>
+    <p class="note">ข้อความพระไตรปิฎกภาษาไทย ฉบับหลวง และบาลีฉบับสยามรัฐ จากฐานข้อมูลเปิด D‑Tipitaka ซึ่งรวบรวมจากโปรแกรม E‑Tipitaka · เลขข้อ (ข้อ) ตรงกับ 84000.org ใช้อ้างอิงข้ามกันได้ ส่วนเลขหน้าเป็นของฉบับดิจิทัลนี้และอาจไม่ตรงกับหน้าใน 84000.org · ชื่อพระสูตรสกัดจากหัวข้อในตัวบท อาจตกหล่นบางหัวข้อ</p>`);
+}
+async function downloadAll(ed) {
+  const st = $('#dlStatus');
+  for (let v = 1; v <= 45; v++) {
+    if (st) st.textContent = `กำลังดาวน์โหลด ${ED_NAME[ed]} เล่ม ${v}/45…`;
+    try { await fetchGz(`${ed}${pad2(v)}.txt`, `${DATA}/${ed}/${v}`); } catch (e) { if (st) st.textContent = `หยุดที่เล่ม ${v}: ${e.message}`; return; }
+  }
+  if (st) st.textContent = `เก็บ${ED_NAME[ed]}ครบ 45 เล่มแล้ว`;
+}
+
+// ---------- events ----------
+const qEl = $('#q');
+let nameT = 0;
+qEl.addEventListener('input', () => {
+  S.q = qEl.value; $('#clearBtn').hidden = !S.q; S.showNames = 6;
+  clearTimeout(nameT); nameT = setTimeout(renderResults, 110);
+});
+$('#sform').addEventListener('submit', e => {
+  e.preventDefault(); S.q = qEl.value; qEl.blur();
+  if (!S.q.trim()) { renderHome(); return; }
+  const ref = parseRef(S.q);
+  renderResults();
+  if (ref && (ref.kind === 'item' || ref.kind === 'page')) { goRef(ref); return; }
+  if (ref && ref.kind === 'vol') { openToc(ref.v); return; }
+  if (!ref) runText();
+});
+document.addEventListener('input', e => { if (e.target.id === 'tocF') $('#tocL').innerHTML = tocRows(+e.target.dataset.v, e.target.value); });
+function goRef(ref) {
+  if (ref.kind === 'item') openReader({ ed: S.ed, v: ref.v, item: ref.item });
+  else if (ref.kind === 'page') openReader({ ed: S.ed, v: ref.v, page: ref.page });
+}
+function openEntry(e) {
+  if (S.ed === 'th') openReader({ ed: 'th', v: e.v, page: e.p, line: e.l });
+  else openReader({ ed: 'pali', v: e.v, item: e.it, pt: e.pt });
+}
+document.addEventListener('click', async e => {
+  const b = e.target.closest('[data-act]'); if (!b) return;
+  const act = b.dataset.act;
+  switch (act) {
+    case 'clear': qEl.value = ''; S.q = ''; b.hidden = true; renderHome(); qEl.focus(); break;
+    case 'ed': S.ed = b.dataset.ed; LS.set('ed', S.ed); dropOtherEdition(S.ed); renderEd(); renderResults(); break;
+    case 'loose': S.loose = !S.loose; renderEd(); renderResults(); break;
+    case 'scope': S.scope = b.dataset.id; LS.set('scope', S.scope); renderScope(); renderResults(); break;
+    case 'pickvols': openPickVols(); break;
+    case 'pv': b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true')); break;
+    case 'pv-clear': $$('[data-act="pv"]').forEach(x => x.setAttribute('aria-pressed', 'false')); break;
+    case 'pv-apply': {
+      S.custom = $$('[data-act="pv"][aria-pressed="true"]').map(x => +x.dataset.v);
+      S.scope = S.custom.length ? 'cus' : 'all'; LS.set('custom', S.custom); LS.set('scope', S.scope);
+      closeSheet(); renderScope(); renderResults(); break;
+    }
+    case 'example': {
+      if (b.dataset.ed && b.dataset.ed !== S.ed) { S.ed = b.dataset.ed; LS.set('ed', S.ed); dropOtherEdition(S.ed); renderEd(); }
+      qEl.value = b.dataset.q; S.q = b.dataset.q; $('#clearBtn').hidden = false;
+      $('#sform').requestSubmit ? $('#sform').requestSubmit() : $('#sform').dispatchEvent(new Event('submit', { cancelable: true }));
+      break;
+    }
+    case 'run': runText(); break;
+    case 'more-names': S.showNames = 60; renderResults(); break;
+    case 'more-hits': S.showHits += 40; updateTextSection(); break;
+    case 'sort': S.sort = b.dataset.s; S.showHits = 40; updateTextSection(); break;
+    case 'fvol': { const v = +b.dataset.v; S.fvol = S.fvol === v ? null : v; S.showHits = 40; updateTextSection(); break; }
+    case 'goref': goRef(parseRef(S.q)); break;
+    case 'vol': openToc(+b.dataset.v); break;
+    case 'open-entry': { const en = S.IX.E[+b.dataset.i]; if (!$('#sheet').hidden) closeSheet(); saveRecentIfTyped(); openEntry(en); break; }
+    case 'open-page': closeSheet(); openReader({ ed: R.open ? R.ed : S.ed, v: +b.dataset.v, page: +b.dataset.p }); break;
+    case 'open-hit': {
+      const T = S.text; if (!T) break;
+      openReader({ ed: T.ed, v: +b.dataset.v, pi: +b.dataset.pi, off: +b.dataset.off, hl: T.Q.srcs }); break;
+    }
+    case 'resume': { const l = LS.get('last', null); if (l) openReader({ ed: l.ed, v: l.v, item: l.item, pt: l.pt }); break; }
+    case 'close': closeReader(false); break;
+    case 'retry-open': if (R.retry) openReader(R.retry); break;
+    case 'prev': prependPage(); break;
+    case 'red': { const ed = b.dataset.ed; if (ed === R.ed) break; openReader({ ed, v: R.v, item: R.item || 1, pt: R.pt || 1, hl: null }); break; }
+    case 'toc': openToc(R.v); break;
+    case 'cite': {
+      const sel = lastSel.text && Date.now() - lastSel.t < 60000 ? lastSel.text : '';
+      const txt = sel ? `“${sel}”\n— ${citation()}` : citation();
+      toast((await copyText(txt)) ? (sel ? 'คัดลอกข้อความพร้อมที่มาแล้ว' : 'คัดลอกที่มาแล้ว · เลือกข้อความก่อนเพื่อคัดลอกพร้อมเนื้อหา') : txt);
+      break;
+    }
+    case 'ext': {
+      const L = link84000();
+      if (!L) { toast('เลื่อนให้ถึงข้อใดข้อหนึ่งก่อน'); break; }
+      if (L === 'part') { openSheet('เปิดใน 84000.org', `<p class="note">ตำแหน่งนี้อยู่ในภาคหลังของเล่ม ${R.v} ซึ่งเลขข้อเริ่มนับใหม่ 84000.org ไม่มีลิงก์ตรงสำหรับส่วนนี้</p>`); break; }
+      const a = (href, t, s) => `<a href="${href}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg><span>${t}<small>${s}</small></span></a>`;
+      openSheet(`เปิดเล่ม ${R.v} ข้อ ${R.item} ใน 84000.org`, `<div class="menu">${a(L.th, 'ฉบับหลวง', 'ภาษาไทย ตามเลขข้อ')}${a(L.pali, 'บาลีอักษรไทย', 'ฉบับสยามรัฐ')}${a(L.roman, 'บาลีอักษรโรมัน', 'Pali Roman')}${a(L.attha, 'อรรถกถา', 'คำอธิบายของข้อนี้')}</div><p class="note">ลิงก์ไปยังเว็บไซต์ 84000.org ซึ่งบางช่วงอาจเปิดช้า</p>`);
+      break;
+    }
+    case 'aa': openSettings(); break;
+    case 'settings': openSettings(); break;
+    case 'size': S.size = +b.dataset.s; LS.set('size', S.size); document.documentElement.style.setProperty('--read-size', S.size + 'px'); $$('[data-act="size"]').forEach(x => x.setAttribute('aria-pressed', String(+x.dataset.s === S.size))); break;
+    case 'mode': S.mode = b.dataset.m; LS.set('mode', S.mode); $$('[data-act="mode"]').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.m === S.mode))); if (R.open) { const it = R.item, pt = R.pt; renderReader(); const el = $(`.it[data-it="${it}"][data-pt="${pt}"]`, rdBody); if (el) scrollToEl(el); } break;
+    case 'dl': b.disabled = true; await downloadAll(b.dataset.ed); b.disabled = false; break;
+    case 'clearcache': await idbClear(); toast('ล้างข้อมูลที่เก็บไว้แล้ว'); break;
+    case 'sheet-close': closeSheet(); break;
+  }
+});
+function saveRecentIfTyped() { const q = S.q.trim(); if (q) saveRecent(q); }
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { if (!$('#sheet').hidden) closeSheet(); else if (R.open) closeReader(false); }
+  if (e.key === '/' && document.activeElement !== qEl && !R.open && $('#sheet').hidden) { e.preventDefault(); qEl.focus(); }
+});
+
+// ---------- start ----------
+renderEd(); renderScope(); renderHome();
+loadIndex().then(() => { if (S.q.trim()) renderResults(); else renderHome(); })
+  .catch(err => { $('#main').insertAdjacentHTML('afterbegin', `<div class="alert">โหลดดัชนีพระสูตรไม่สำเร็จ (${H(err.message)}) ลองรีเฟรชหน้า</div>`); });
+})();
+</script>
+</body>
+</html>
