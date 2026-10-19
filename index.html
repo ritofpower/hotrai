@@ -169,6 +169,31 @@ details.pit summary .n{color:var(--muted);font-weight:400;font-size:13px}
 .it.tgt{background:var(--accent);color:var(--accent-ink)}
 .ol{white-space:pre-wrap;line-height:1.75}
 .ol.i1{padding-left:1.2em} .ol.i2{padding-left:2.6em}
+/* copy row under a unit heading, and the copy sheet */
+.cpb{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px;margin:.15em 0 1.2em;text-indent:0;font-family:var(--font-ui)}
+.cpb button{display:inline-flex;align-items:center;gap:6px;min-height:34px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:5px 12px;font:500 13px/1.2 var(--font-ui)}
+.cpb button:hover{border-color:var(--accent)}
+.cpb .cpb-main{border-color:var(--accent);color:var(--accent-strong)}
+.cpb .cpb-more{padding:5px 9px}
+.cpb svg{width:15px;height:15px;flex:none}
+.cpb-name{flex-basis:100%;text-align:center;color:var(--muted);font:500 12.5px/1.45 var(--font-ui)}
+.cpb-name .no{margin-right:3px}
+.hd.ph{font-size:1.04em}
+.cpgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:6px 0 8px}
+.cpbig{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-width:0;text-align:left;border:1.5px solid var(--line);background:var(--bg);border-radius:14px;padding:12px 40px 12px 14px;color:var(--ink);font-family:var(--font-ui)}
+.cpbig:hover{border-color:var(--accent)}
+.cpbig b{font-size:15px}
+.cpbig span{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.cpbig svg{position:absolute;top:12px;right:12px;width:18px;height:18px;color:var(--accent-strong)}
+.cpbig.is-wait{opacity:.7}
+.cpchk{display:flex;gap:8px;align-items:flex-start;font-size:13.5px;color:var(--muted);margin:4px 0 6px;line-height:1.45}
+.cpchk input{margin-top:3px;accent-color:var(--accent);flex:none}
+.cpparts{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:12px 0 4px}
+.cpp-ed{flex-basis:100%;font-size:13px;font-weight:600}
+.cpparts .chip,.sheet .chips .chip{display:inline-flex;align-items:center;gap:6px}
+.cpparts .chip svg,.sheet .chips .chip svg{width:14px;height:14px;flex:none}
+.cpparts .chip.done{background:var(--accent-soft);border-color:var(--accent)}
+.cpta{min-height:40vh;font:15px/1.6 var(--font-text);resize:vertical}
 .prevp{display:block;margin:14px auto 0;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 16px;font:500 13.5px var(--font-ui)}
 .rd-end{height:1px}
 .rd-load{padding:40px 0;text-align:center;font-family:var(--font-ui);color:var(--muted)}
@@ -263,7 +288,7 @@ details.pit summary .n{color:var(--muted);font-weight:400;font-size:13px}
   <div class="rd-body" id="rdBody"></div>
   <nav class="rd-bar" aria-label="เครื่องมืออ่าน">
     <button data-act="toc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg>สารบัญ</button>
-    <button data-act="cite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>คัดลอกอ้างอิง</button>
+    <button data-act="copy-menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>คัดลอก</button>
     <button data-act="ext"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>84000</button>
     <button data-act="aa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19l5-14 5 14M5 14h6M14 19l3.5-9 3.5 9M15.2 16h4.6"/></svg>ตัวอักษร</button>
   </nav>
@@ -362,9 +387,28 @@ function prepIndex(raw) {
   const byVol = new Map(), pageHeads = new Map();
   for (const e of E) {
     if (!byVol.has(e.v)) byVol.set(e.v, []);
-    byVol.get(e.v).push(e);
+    const arr = byVol.get(e.v); e.vi = arr.length; arr.push(e);
     const k = e.v + ':' + e.p; if (!pageHeads.has(k)) pageHeads.set(k, new Map());
     pageHeads.get(k).set(e.l, e);
+  }
+  // A heading of another kind inside a run of suttas (e.g. "ติรัจฉานกถา" within DN 1) is a section of
+  // the sutta before it, not a unit of its own.
+  const numbered = e => !!e.num || /ที่\s*[๐-๙]+$/.test(e.title);
+  for (const arr of byVol.values()) {
+    let prev = null;
+    for (let k = 0; k < arr.length; k++) {
+      const e = arr[k];
+      if (e.lvl < 3) { prev = null; continue; }
+      if (prev && prev.t !== e.t && !numbered(e)) {
+        let inner = false;
+        for (let j = k + 1; j < arr.length && arr[j].lvl === 3; j++) {
+          if (arr[j].t === prev.t) { inner = true; break; }
+          if (numbered(arr[j])) break;
+        }
+        if (inner) { e.inner = true; continue; }
+      }
+      prev = e;
+    }
   }
   for (const arr of byVol.values()) {
     const l3 = arr.filter(e => e.lvl === 3);
@@ -430,10 +474,24 @@ function parseVol(text, ed, v) {
     pageNo.push(parseInt(hdr.slice(0, tab < 0 ? hdr.length : tab), 10)); items.push(tab < 0 ? '' : hdr.slice(tab + 1));
     i = text.indexOf('\f', nl);
   }
-  const mOff = [], mN = [], mPart = []; let part = 1, last = 0; const re = /\[([๐-๙]+)\]/g; let m;
-  while ((m = re.exec(text))) { const n = parseInt(ard(m[1]), 10); if (n < last - 5) part++; mOff.push(m.index); mN.push(n); mPart.push(part); last = n; }
+  const mk = parseMarkers(text);
   return { ed, v, text, n: starts.length, starts: Int32Array.from(starts), bodies: Int32Array.from(bodies), pageNo: Int32Array.from(pageNo), items,
-    mOff: Int32Array.from(mOff), mN: Int32Array.from(mN), mPart: Uint8Array.from(mPart), parts: part };
+    mOff: mk.mOff, mN: mk.mN, mPart: mk.mPart, parts: mk.parts };
+}
+// Item markers: only "[n]" at the start of a line, with text after it, counts. Numbering may restart at 1 (a new part of the volume)
+// only when it really continues 2, 3…; other bracket numbers inside lines are the edition's reference marks.
+function parseMarkers(text) {
+  const raw = [], re = /(?:^|\n)[ \t]*\[([๐-๙]+)\](?=[ \t]*[^\s])/g; let m;
+  while ((m = re.exec(text))) raw.push([m.index + m[0].indexOf('['), parseInt(ard(m[1]), 10)]);
+  const mOff = [], mN = [], mPart = []; let part = 1, last = 0;
+  for (let j = 0; j < raw.length; j++) {
+    const n = raw[j][1], nx = j + 1 < raw.length ? raw[j + 1][1] : null, nx2 = j + 2 < raw.length ? raw[j + 2][1] : null;
+    if (n > last && (n <= last + 60 || (nx !== null && n < nx && nx <= n + 60))) last = n;
+    else if (n <= 2 && last > 5 && nx !== null && n < nx && nx <= n + 5 && (nx2 === null || (nx < nx2 && nx2 <= nx + 10))) { part++; last = n; }
+    else if (n !== last) continue;
+    mOff.push(raw[j][0]); mN.push(n); mPart.push(part);
+  }
+  return { mOff: Int32Array.from(mOff), mN: Int32Array.from(mN), mPart: Uint8Array.from(mPart), parts: part };
 }
 function lastLE(arr, x) { let lo = 0, hi = arr.length - 1, ans = -1; while (lo <= hi) { const mid = (lo + hi) >> 1; if (arr[mid] <= x) { ans = mid; lo = mid + 1; } else hi = mid - 1; } return ans; }
 function pageOf(vol, off) { return Math.max(0, lastLE(vol.starts, off)); }
@@ -444,6 +502,234 @@ function findMark(vol, pt, n) {
   for (let k = 0; k < vol.mN.length; k++) if (vol.mN[k] === n && vol.mPart[k] === pt) return k;
   for (let k = 0; k < vol.mN.length; k++) if (vol.mN[k] === n) return k;
   return -1;
+}
+function isMarkerAt(vol, off) { const k = lastLE(vol.mOff, off); return k >= 0 && vol.mOff[k] === off; }
+// First marker at or after (part, item); accepted markers ascend through a volume.
+function markerAtOrAfter(vol, pt, it) {
+  const key = pt * 100000 + it; let lo = 0, hi = vol.mN.length - 1, ans = -1;
+  while (lo <= hi) { const mid = (lo + hi) >> 1; if (vol.mPart[mid] * 100000 + vol.mN[mid] >= key) { ans = mid; hi = mid - 1; } else lo = mid + 1; }
+  return ans;
+}
+
+// ---- whole units of the Sutta Pitaka (a sutta, jataka, vimana…) as plain text ----
+const SUTTA_VOL = v => v >= 9 && v <= 33;
+const BLANKISH = /^[_\-–—.\s]*$/;
+// Line table for a volume: start/end offsets of every text line, page-header lines left out.
+function ensureLines(vol) {
+  if (vol.ls) return vol;
+  const t = vol.text, N = t.length, st = [], en = [];
+  let s = 0, nf = t.indexOf('\f'); if (nf < 0) nf = N;
+  while (s < N) {
+    if (s === nf) { const nl = t.indexOf('\n', s); s = nl < 0 ? N : nl + 1; nf = t.indexOf('\f', s); if (nf < 0) nf = N; continue; }
+    let e = t.indexOf('\n', s); if (e < 0 || e > nf) e = nf;
+    st.push(s); en.push(e);
+    s = e < N && t[e] === '\n' ? e + 1 : e;
+  }
+  vol.ls = Int32Array.from(st); vol.le = Int32Array.from(en);
+  return vol;
+}
+function lineText(vol, k) { return vol.text.slice(vol.ls[k], vol.le[k]).trim(); }
+function lineHasMarker(vol, k) { const j = lastLE(vol.mOff, vol.le[k]); return j >= 0 && vol.mOff[j] >= vol.ls[k]; }
+function headLine(vol, p, l) {
+  ensureLines(vol);
+  const k0 = Math.max(0, lastLE(vol.ls, vol.bodies[pageIndexOf(vol, p)]));
+  return Math.min(vol.ls.length - 1, k0 + l);
+}
+// A unit is a heading in vols 9–33 with no smaller heading under it (a Dhammapada vagga counts as one).
+function isUnit(IX, e) {
+  if (!e || e.inner || !SUTTA_VOL(e.v)) return false;
+  const n = IX.byVol.get(e.v)[e.vi + 1];
+  return e.lvl === 3 || !n || n.lvl <= e.lvl;
+}
+function unitAt(IX, e) {
+  if (!e) return null;
+  const arr = IX.byVol.get(e.v);
+  if (e.inner) { let j = e.vi; while (j > 0 && arr[j].inner) j--; return isUnit(IX, arr[j]) ? arr[j] : null; }
+  if (isUnit(IX, e)) return e;
+  const n = arr[e.vi + 1];
+  return n && isUnit(IX, n) && n.pt === e.pt && n.it === e.it ? n : null;
+}
+function unitLabel(e) { return e.t === 'สูตร' ? 'พระสูตร' : e.t; }
+function nextOther(IX, e, same) { const arr = IX.byVol.get(e.v); for (let j = e.vi + 1; j < arr.length; j++) if (!same(arr[j])) return arr[j]; return null; }
+// Closing lines of a vagga/nipata and the summary list after it belong to the vagga, not to its last sutta.
+const TH_UDD = /^(?:รวม|ประมวล)(?:พระสูตร|สูตร|อปทาน|ชาดก|วิมาน|เรื่อง|กถา|จริยา|วรรค|เปตวัตถุ|คาถา)/;
+function thContainerEnd(s) {
+  if (!/^จบ/.test(s)) return false;
+  if (/วรรคที่|นิบาตชาดก/.test(s)) return true;
+  const t = s.replace(/^จบ\s*/, '').replace(/[\s.ฯ]+$/, '').replace(/\s*ที่\s*[๐-๙]+$/, '');
+  return /(?:วรรค|ปัณณาสก์|นิบาต|สังยุตต์|สังยุต)$/.test(t);
+}
+function paContainerEnd(s) { return s.length <= 70 && /ฯ$/.test(s) && /^\S*(?:วคฺโค|วคฺคํ|นิปาโต|นิปาตํ|ปณฺณาสโก|ปณฺณาสกํ|สํยุตฺตํ|เปยฺยาโล)(?:\s|ฯ)/.test(s); }
+const PA_UDD = /อุทฺทานํ(?:\s+ภวติ)?\s*[๐-๙]*$/;
+function paKind(vol, k) {
+  const s = lineText(vol, k);
+  if (BLANKISH.test(s)) return 'blank';
+  if (s[0] === '#') return 'note';
+  if (lineHasMarker(vol, k)) return 'item';
+  if (vol.text[vol.ls[k]] === '\t' && s.length <= 70 && !/ฯ$/.test(s)) return /วคฺค|วคฺโค|นิปาต|ปณฺณาส|สํยุตฺต|ภาณวาร|อุทฺทาน|ปาฬิ|ปิฏก|นิกาย/.test(s) ? 'container' : 'head';
+  return 'text';
+}
+// Thai: from the unit's heading line to the next heading in the index.
+function thaiUnitRange(IX, tv, e) {
+  ensureLines(tv);
+  const n = nextOther(IX, e, x => x.inner || (x.p === e.p && x.l === e.l));
+  const L0 = headLine(tv, e.p, e.l);
+  let L1 = n ? headLine(tv, n.p, n.l) : tv.ls.length;
+  if (L1 <= L0) L1 = Math.min(tv.ls.length, L0 + 1);
+  if (e.lvl === 3) {
+    const j = lastLE(tv.mOff, tv.le[L1 - 1]);
+    const Lm = j >= 0 && tv.mOff[j] >= tv.ls[L0] ? lastLE(tv.ls, tv.mOff[j]) : L0;
+    for (let k = Lm + 1; k < L1; k++) { const s = lineText(tv, k); if (thContainerEnd(s) || TH_UDD.test(s)) { L1 = k; break; } }
+  }
+  while (L1 > L0 + 1 && BLANKISH.test(lineText(tv, L1 - 1))) L1--;
+  return { L0, L1 };
+}
+// Pali: the same item numbers as the Thai unit, plus the unit's own title lines above its first item.
+function paliUnitRange(IX, pv, e) {
+  ensureLines(pv);
+  const n = nextOther(IX, e, x => x.inner || (x.pt === e.pt && x.it === e.it));
+  const kS = markerAtOrAfter(pv, e.pt, e.it); if (kS < 0) return null;
+  const kE = n ? markerAtOrAfter(pv, n.pt, n.it) : -1;
+  if (kE >= 0 && kE <= kS) return null;
+  const Lm = lastLE(pv.ls, pv.mOff[kS]);
+  let L0 = Lm;
+  for (let j = Lm, heads = 0; j > 0 && heads < 3; heads++) {
+    let i = j - 1; while (i > 0 && paKind(pv, i) === 'blank') i--;
+    const kd = paKind(pv, i);
+    if (!(kd === 'head' || (e.lvl < 3 && kd === 'container'))) break;
+    j = i; L0 = i;
+  }
+  let L1 = kE >= 0 ? lastLE(pv.ls, pv.mOff[kE]) : pv.ls.length;
+  for (let t = 0; L1 > Lm + 1;) {
+    const kd = paKind(pv, L1 - 1);
+    if (kd === 'blank' || kd === 'note') { L1--; continue; }
+    if ((kd === 'head' || kd === 'container') && t < 6) { L1--; t++; continue; }
+    break;
+  }
+  const Llast = Math.max(Lm, lastLE(pv.ls, pv.mOff[(kE >= 0 ? kE : pv.mOff.length) - 1]));
+  for (let k = Llast + 1; k < L1; k++) { const s = lineText(pv, k); if (paContainerEnd(s) || (s.length <= 40 && PA_UDD.test(s))) { L1 = k; break; } }
+  while (L1 > Lm + 1) { const kd = paKind(pv, L1 - 1); if (kd === 'blank' || kd === 'note') L1--; else break; }
+  return { L0, Lm, L1, kS, kE };
+}
+// Clean Pali: keep the item marker (and the sutta number right after it); drop footnote numbers after words
+// and bracketed reference marks inside the line.
+function cleanPaliLine(s) {
+  let lead = '';
+  const m = s.match(/^\[[๐-๙]+\](?:\s+[๐-๙]{1,3}(?=\s))?/);
+  if (m) { lead = m[0]; s = s.slice(m[0].length); }
+  s = s.replace(/\s*\[[๐-๙]+\]/g, '').replace(/(\S)(?:\s+[๐-๙]{1,3})+(?=\s|$)/g, '$1');
+  return (lead + s).replace(/\s{2,}/g, ' ').trim();
+}
+// Role of every line in a volume: 0 blank, 1 footnote, 2 verse, 3 paragraph start, 4 continuation.
+// Most volumes indent the first line of a paragraph; the Jataka volumes use a hanging indent instead
+// (item line at the margin, its continuation lines indented), so the indent of the line after a
+// paragraph start decides which layout that paragraph uses.
+function lineRoles(vol) {
+  if (vol.roles) return vol.roles;
+  ensureLines(vol);
+  const t = vol.text, N = vol.ls.length, R = new Uint8Array(N), ind = new Uint8Array(N), mk = new Uint8Array(N);
+  for (let k = 0; k < N; k++) {
+    let cs = vol.ls[k], i = 0; while (i < 2 && t[cs] === '\t') { i++; cs++; }
+    ind[k] = i;
+    const s = t.slice(cs, vol.le[k]).trim();
+    R[k] = BLANKISH.test(s) ? 0 : s[0] === '#' ? 1 : 9;
+    if (R[k] === 9) mk[k] = lineHasMarker(vol, k) ? 1 : 0;
+  }
+  const nextText = k => { let j = k + 1; while (j < N && R[j] === 0) j++; return j < N && R[j] !== 1 ? j : -1; };
+  let cont = -1;
+  for (let k = 0; k < N; k++) {
+    if (R[k] !== 9) { cont = -1; continue; }
+    const i = ind[k];
+    if (!mk[k] && cont >= 0 && i === cont) { R[k] = 4; continue; }
+    const j = nextText(k);
+    if (i === 2) {
+      const opens = j >= 0 && ((ind[j] === 0 && !mk[j]) || (mk[k] && ind[j] !== 2));
+      if (!opens) { R[k] = 2; cont = -1; continue; }
+      R[k] = 3; cont = 0; continue;
+    }
+    if (mk[k] && j === k + 1 && ind[j] === 2 && !mk[j]) {          // item line that opens a stanza
+      const j2 = nextText(j);
+      if (j2 < 0 || ind[j2] === 2) { R[k] = 2; cont = -1; continue; }
+    }
+    R[k] = 3;
+    cont = (i === 0 && mk[k] && j === k + 1 && ind[j] === 1 && !mk[j]) ? 1 : 0;
+  }
+  vol.ind = ind; vol.mkl = mk; vol.roles = R;
+  return R;
+}
+// Lines [k0, k1) printed on page index pi.
+function pageLines(vol, pi) {
+  ensureLines(vol);
+  const k0 = lastLE(vol.ls, vol.bodies[pi] - 1) + 1, k1 = lastLE(vol.ls, pageEnd(vol, pi) - 1) + 1;
+  return [k0, Math.max(k0, k1)];
+}
+// Printed lines become paragraphs (blank line between), verse lines stay one per line.
+function unitBody(vol, L0, L1, pali, clean) {
+  const roles = lineRoles(vol), t = vol.text, out = []; let para = null, verse = null;
+  const flushP = () => { if (para !== null) { out.push(para); para = null; } };
+  const flushV = () => { if (verse) { out.push(verse.join('\n')); verse = null; } };
+  for (let k = L0; k < L1; k++) {
+    const r = roles[k];
+    if (r === 0) { flushP(); flushV(); continue; }
+    let x = t.slice(vol.ls[k] + vol.ind[k], vol.le[k]).trim();
+    if (r === 1) { if (!clean) { flushP(); flushV(); out.push(x); } continue; }
+    if (pali && clean) x = cleanPaliLine(x);
+    if (!x) continue;
+    if (r === 2) { flushP(); (verse || (verse = [])).push(x); continue; }
+    flushV();
+    if (r === 3 || para === null) { flushP(); para = x; continue; }
+    if (para.endsWith('-')) para = para.slice(0, -1) + x;
+    else para += (pali ? ' ' : joinGlue(para[para.length - 1], x[0])) + x;
+  }
+  flushP(); flushV();
+  return out.join('\n\n');
+}
+function itemSpan(vol, a, b) {
+  const k1 = lastLE(vol.mOff, a - 1) + 1, k2 = lastLE(vol.mOff, b);
+  const f = k1 <= k2 ? vol.mN[k1] : markAt(vol, a).n, l = k1 <= k2 ? vol.mN[k2] : f;
+  return f === l ? thd(f) : thd(f) + '–' + thd(l);
+}
+// The whole unit as text to paste elsewhere: title, source line, then the body.
+function unitText(IX, vol, e, clean) {
+  const name = (e.num ? e.num + '. ' : '') + e.title, place = IX.vols[e.v - 1];
+  if (vol.ed !== 'pali') {
+    const r = thaiUnitRange(IX, vol, e);
+    let B = r.L0 + 1;
+    if (e.sub) { let k = B; while (k < r.L1 && BLANKISH.test(lineText(vol, k))) k++; if (k < r.L1 && lineText(vol, k).replace(/\s+/g, ' ') === e.sub) B = k + 1; }
+    const body = unitBody(vol, B, r.L1, false, false);
+    const cite = `พระไตรปิฎก ฉบับหลวง เล่ม ${thd(e.v)} ข้อ ${itemSpan(vol, vol.ls[r.L0], vol.le[r.L1 - 1])}`;
+    const head = [name, e.sub, `(${cite} · ${place})`].filter(Boolean).join('\n');
+    return { ed: 'th', name, cite, head, body, text: head + '\n\n' + body };
+  }
+  const r = paliUnitRange(IX, vol, e); if (!r) return null;
+  const titles = [];
+  for (let k = r.L0; k < r.Lm; k++) { const s = lineText(vol, k); if (!BLANKISH.test(s)) titles.push(clean ? cleanPaliLine(s) : s); }
+  const body = unitBody(vol, r.Lm, r.L1, true, clean);
+  const shared = IX.byVol.get(e.v).filter(x => x.pt === e.pt && x.it === e.it && isUnit(IX, x)).length;
+  const cite = `พระไตรปิฎกบาลี ฉบับสยามรัฐ เล่ม ${thd(e.v)} ข้อ ${itemSpan(vol, vol.mOff[r.kS], vol.le[r.L1 - 1])}`;
+  const title = titles.join(' ');
+  const head = [title, `(${cite} · ตรงกับ ${name} ในฉบับหลวง${shared > 1 ? ` · ข้อนี้รวม ${thd(shared)} หัวข้อของฉบับหลวง` : ''})`].filter(Boolean).join('\n');
+  return { ed: 'pali', name: title || name, cite, head, body, text: head + '\n\n' + body };
+}
+// Split a long unit into parts no longer than `size` characters, each labelled with its name and source.
+function splitParts(u, size) {
+  const tag = (i, n) => `\n[ส่วนที่ ${thd(i)}/${thd(n)}]\n\n`;
+  const later = `${u.name} (ต่อ)\n(${u.cite})`;
+  const budget = Math.max(800, size - Math.max(u.head.length, later.length) - 24);
+  const chunks = []; let cur = '';
+  for (let b of u.body.split('\n\n')) {
+    while (b.length > budget) {
+      let cut = b.lastIndexOf(' ', budget); if (cut < budget * 0.5) cut = budget;
+      if (cur) { chunks.push(cur); cur = ''; }
+      chunks.push(b.slice(0, cut).trim()); b = b.slice(cut).trim();
+    }
+    if (cur && cur.length + 2 + b.length > budget) { chunks.push(cur); cur = ''; }
+    cur = cur ? cur + '\n\n' + b : b;
+  }
+  if (cur) chunks.push(cur);
+  const n = chunks.length;
+  if (n <= 1) return [u.text];
+  return chunks.map((c, i) => (i === 0 ? u.head : later) + tag(i + 1, n) + c);
 }
 // Find pages where every term occurs. Terms ignore spacing, line breaks and punctuation.
 function searchVol(vol, Q) {
@@ -501,7 +787,7 @@ function snippetHTML(vol, r, srcs) {
     if (inR && !open) { html += '<mark>'; open = true; } else if (!inR && open) { html += '</mark>'; open = false; }
     const c = text[i];
     if (c === '-' && text[i + 1] === '\n') continue;
-    if (c === '\n') { if (!sp && text[i - 1] !== '-' && joinGlue(text[i - 1], text[i + 1])) { html += ' '; sp = true; } continue; }
+    if (c === '\n') { if (!sp && text[i - 1] !== '-' && (vol.ed === 'pali' || joinGlue(text[i - 1], text[i + 1]))) { html += ' '; sp = true; } continue; }
     if (c === '\t' || c === ' ' || c === '\f') { if (!sp) { html += ' '; sp = true; } continue; }
     sp = false; html += H(c);
   }
@@ -534,8 +820,14 @@ const LS = {
 const S = {
   ed: LS.get('ed', 'th'), scope: LS.get('scope', 'all'), custom: LS.get('custom', []), loose: false,
   q: '', IX: null, vols: new Map(), text: null, run: 0, showNames: 6, showHits: 40, sort: null, fvol: null,
-  mode: LS.get('mode', 'flow'), size: LS.get('size', 18)
+  mode: LS.get('mode', 'flow'), size: LS.get('size', 18),
+  cpClean: LS.get('cpClean', true), cpSize: LS.get('cpSize', 10000), cpE: null, cpDone: new Set()
 };
+const IDX_KEY = 'v2/idx';
+const ICON_COPY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>';
+const ICON_MORE = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg>';
+const CP_SIZES = [[5000, '5,000'], [10000, '10,000 · LINE'], [20000, '20,000 · Messenger'], [60000, '60,000 · Facebook']];
+const LINE_LIMIT = 10000;
 document.documentElement.style.setProperty('--read-size', S.size + 'px');
 
 // ---------- storage of downloaded volumes (per browser, optional) ----------
@@ -613,13 +905,13 @@ function loadVol(ed, v) {
 function dropOtherEdition(ed) { for (const k of [...S.vols.keys()]) if (!k.startsWith(ed)) { S.vols.delete(k); volP.delete(k); } }
 
 async function loadIndex() {
-  const buf = await fetchGz('idx.txt', DATA + '/idx');
+  const buf = await fetchGz('idx.txt?v=2', IDX_KEY);
   S.IX = prepIndex(JSON.parse(new TextDecoder('utf-8').decode(await gunzip(buf))));
 }
 
 // ---------- helpers ----------
 const live = $('#live');
-function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => { t.hidden = true; }, 2600); }
+function toast(msg, ms) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => { t.hidden = true; }, ms || 2600); }
 function inScopeFn() {
   if (S.scope === 'cus') { const set = new Set(S.custom); return set.size ? (v => set.has(v)) : (() => true); }
   const sc = SCOPES.find(x => x.id === S.scope) || SCOPES[0];
@@ -812,13 +1104,15 @@ const R = { open: false };
 const rdBody = $('#rdBody');
 function headsFor(vol, page) { return (vol.ed === 'th' && S.IX) ? (S.IX.pageHeads.get(vol.v + ':' + page) || null) : null; }
 function seg(text, a, b, ranges, vol) {
-  let html = '', last = a; const re = /\[([๐-๙]+)\]/g; re.lastIndex = 0;
+  let html = '', last = a; const re = /\[([๐-๙]+)\]/g;
   const s = text.slice(a, b); let m;
   while ((m = re.exec(s))) {
-    html += marked(text, last, a + m.index, ranges);
-    const mk = markAt(vol, a + m.index);
+    const off = a + m.index;
+    if (!isMarkerAt(vol, off)) continue;
+    html += marked(text, last, off, ranges);
+    const mk = markAt(vol, off);
     html += `<span class="it" data-it="${mk.n}" data-pt="${mk.pt}">${m[1]}</span>`;
-    last = a + m.index + m[0].length;
+    last = off + m[0].length;
   }
   return html + marked(text, last, b, ranges);
 }
@@ -832,64 +1126,93 @@ function marked(text, a, b, ranges) {
   }
   return html + H(text.slice(i, b));
 }
-function pageHTML(vol, pi) {
-  const text = vol.text, a0 = vol.bodies[pi], b0 = pageEnd(vol, pi), pg = vol.pageNo[pi];
-  const ranges = R.hl && R.hl.length ? rangesIn(text, a0, b0, R.hl) : [];
-  const L = []; let s = a0;
-  for (;;) { let e = text.indexOf('\n', s); if (e < 0 || e > b0) e = b0; L.push([s, e]); if (e >= b0) break; s = e + 1; }
-  const heads = headsFor(vol, pg);
-  const C = L.map(([s, e], li) => {
-    if (s >= e) return { t: 'blank' };
-    let cs = s, ind = 0; if (text[cs] === '\t') { ind = 1; cs++; if (text[cs] === '\t') { ind = 2; cs++; } }
-    const h = heads && heads.get(li);
-    if (h) return { t: 'head', h, cs, e, li };
-    if (text[cs] === '#') return { t: 'note', cs, e, li };
-    if (/^[_\-–—.\s]+$/.test(text.slice(cs, e))) return { t: 'blank' };
-    return { t: ind === 2 ? 'verse' : ind === 1 ? 'para' : 'cont', cs, e, li, ind };
-  });
-  for (let i = C.length - 1; i >= 0; i--) {
-    if (C[i].t !== 'verse') continue;
-    let j = i + 1; while (j < C.length && C[j].t === 'blank') j++;
-    const nx = C[j];
-    if ((nx && nx.t === 'cont') || (text[C[i].cs] === '[' && !(nx && nx.t === 'verse'))) C[i].t = 'para';
+// Copy row under a unit heading: this edition, the other edition, more options.
+function unitBarHTML(e, ed) {
+  const other = ed === 'th' ? 'pali' : 'th';
+  return `<div class="cpb" data-u="${e.i}">${ed === 'pali' ? `<span class="cpb-name">ฉบับหลวง: ${entryLine(e)}</span>` : ''}` +
+    `<button class="cpb-main" data-act="cp-unit" data-i="${e.i}" data-ed="${ed}">${ICON_COPY}คัดลอกทั้ง${unitLabel(e)}</button>` +
+    `<button data-act="cp-unit" data-i="${e.i}" data-ed="${other}">${ICON_COPY}${other === 'pali' ? 'บาลี' : 'ไทย'}</button>` +
+    `<button class="cpb-more" data-act="cp-sheet" data-i="${e.i}" aria-label="ตัวเลือกการคัดลอก">${ICON_MORE}</button></div>`;
+}
+// Where each unit starts in a Pali volume: its title lines and its first item line.
+function paliUnits(pv) {
+  if (pv.units) return pv.units;
+  const byStart = new Map(), byBody = new Map();
+  for (const e of S.IX.byVol.get(pv.v) || []) {
+    if (!isUnit(S.IX, e)) continue;
+    const r = paliUnitRange(S.IX, pv, e); if (!r || byBody.has(r.Lm)) continue;
+    const u = { e, L0: r.L0, Lm: r.Lm };
+    byBody.set(r.Lm, u); if (!byStart.has(r.L0)) byStart.set(r.L0, u);
   }
-  C.forEach((c, li) => {
-    if (c.t !== 'head' || !c.h.sub) return;
-    for (let j = li + 1; j <= li + 3 && j < C.length; j++) {
-      const cj = C[j]; if (cj.t === 'blank') continue; if (cj.t === 'head') break;
-      if (text.slice(cj.cs, cj.e).replace(/\s+/g, ' ').trim() === c.h.sub) { cj.t = 'sub'; break; }
+  return (pv.units = { byStart, byBody });
+}
+function pageHTML(vol, pi) {
+  const text = vol.text, pg = vol.pageNo[pi], pali = vol.ed === 'pali';
+  const ranges = R.hl && R.hl.length ? rangesIn(text, vol.bodies[pi], pageEnd(vol, pi), R.hl) : [];
+  const roles = lineRoles(vol), [k0, k1] = pageLines(vol, pi);
+  const heads = headsFor(vol, pg);
+  const C = [];
+  for (let k = k0; k < k1; k++) {
+    const c = { k, li: k - k0, cs: vol.ls[k] + vol.ind[k], e: vol.le[k], ind: vol.ind[k], mk: vol.mkl[k], r: roles[k] };
+    const h = heads && heads.get(c.li); if (h) { c.r = 'head'; c.h = h; }
+    C.push(c);
+  }
+  C.forEach((c, i) => {
+    if (c.r !== 'head') return;
+    let at = c;
+    if (c.h.sub) for (let j = i + 1; j <= i + 3 && j < C.length; j++) {
+      const cj = C[j]; if (cj.r === 0) continue; if (cj.r === 'head') break;
+      if (text.slice(cj.cs, cj.e).replace(/\s+/g, ' ').trim() === c.h.sub) { cj.r = 'sub'; at = cj; break; }
     }
+    if (S.IX && isUnit(S.IX, c.h)) at.barAfter = c.h;
   });
+  if (pali && S.IX && SUTTA_VOL(vol.v)) {
+    const U = paliUnits(vol);
+    for (const c of C) {
+      const us = U.byStart.get(c.k);
+      if (us) for (const cj of C) if (cj.k >= us.L0 && cj.k < us.Lm && cj.r !== 0) { cj.r = 'phead'; cj.u = us.e; }
+      const ub = U.byBody.get(c.k); if (ub) c.bar = ub.e;
+    }
+  }
+  const line = c => seg(text, c.cs, c.e, ranges, vol);
   let html = `<section class="pg" data-pi="${pi}"><div class="pgno"><span>หน้า ${pg}</span></div>`;
   if (S.mode === 'lines') {
-    for (const c of C) html += c.t === 'blank' ? '<div class="ol">&nbsp;</div>' : `<div class="ol i${c.ind || (c.t === 'head' ? 2 : 0)}">${seg(text, c.cs, c.e, ranges, vol)}</div>`;
+    for (const c of C) {
+      if (c.bar) html += unitBarHTML(c.bar, vol.ed);
+      html += c.r === 0 ? '<div class="ol">&nbsp;</div>' : `<div class="ol i${c.ind}">${line(c)}</div>`;
+      if (c.barAfter) html += unitBarHTML(c.barAfter, vol.ed);
+    }
     return html + '</section>';
   }
   let para = null;
   const flush = () => {
     if (!para) return;
     let h = '';
-    para.p.forEach((x, k) => {
-      let e = x[1], glue = k < para.p.length - 1 ? joinGlue(text[e - 1], text[para.p[k + 1][0]]) : '';
-      if (k < para.p.length - 1 && text[e - 1] === '-') { e--; glue = ''; }
-      h += seg(text, x[0], e, ranges, vol) + (k < para.p.length - 1 ? glue : '');
+    para.p.forEach((c, j) => {
+      let e = c.e, glue = '';
+      if (j < para.p.length - 1) { glue = pali ? ' ' : joinGlue(text[e - 1], text[para.p[j + 1].cs]); if (text[e - 1] === '-') { e--; glue = ''; } }
+      h += seg(text, c.cs, e, ranges, vol) + glue;
     });
-    html += `<p class="${para.c}">${h}</p>`; para = null;
+    html += `<p class="${para.cls}">${h}</p>`; para = null;
   };
   for (let i = 0; i < C.length; i++) {
     const c = C[i];
-    if (c.t === 'blank') { flush(); continue; }
-    if (c.t === 'head') { flush(); html += `<h3 class="hd lv${c.h.lvl}" id="h-${pg}-${c.li}" data-i="${c.h.i}">${seg(text, c.cs, c.e, ranges, vol)}</h3>`; continue; }
-    if (c.t === 'sub') { flush(); html += `<p class="hs">${seg(text, c.cs, c.e, ranges, vol)}</p>`; continue; }
-    if (c.t === 'note') { flush(); html += `<p class="fn">${seg(text, c.cs, c.e, ranges, vol)}</p>`; continue; }
-    if (c.t === 'verse') {
+    if (c.bar) { flush(); html += unitBarHTML(c.bar, vol.ed); }
+    if (c.r === 0) flush();
+    else if (c.r === 'head') { flush(); html += `<h3 class="hd lv${c.h.lvl}" id="h-${pg}-${c.li}" data-i="${c.h.i}">${line(c)}</h3>`; }
+    else if (c.r === 'sub') { flush(); html += `<p class="hs">${line(c)}</p>`; }
+    else if (c.r === 'phead') { flush(); html += `<h3 class="hd lv3 ph" data-i="${c.u.i}" data-u="${c.u.i}">${line(c)}</h3>`; }
+    else if (c.r === 1) { flush(); html += `<p class="fn">${line(c)}</p>`; }
+    else if (c.r === 2) {
       flush(); let h = '', j = i;
-      while (j < C.length && C[j].t === 'verse') { h += `<span class="vl">${seg(text, C[j].cs, C[j].e, ranges, vol)}</span>`; j++; }
-      html += `<div class="vs">${h}</div>`; i = j - 1; continue;
+      while (j < C.length && C[j].r === 2 && (j === i || (!C[j].bar && !C[j - 1].barAfter))) { h += `<span class="vl">${line(C[j])}</span>`; j++; }
+      html += `<div class="vs">${h}</div>`; i = j - 1;
+      if (C[i].barAfter) html += unitBarHTML(C[i].barAfter, vol.ed);
+      continue;
     }
-    if (c.t === 'para') { flush(); para = { c: 'pa', p: [[c.cs, c.e]] }; continue; }
-    if (!para) para = { c: 'pa nc', p: [] };
-    para.p.push([c.cs, c.e]);
+    else if (c.r === 3) { flush(); para = { cls: c.ind === 0 && !c.mk ? 'pa nc' : 'pa', p: [c] }; }
+    else { if (!para) para = { cls: 'pa nc', p: [] }; para.p.push(c); }
+    if (c.barAfter) { flush(); html += unitBarHTML(c.barAfter, vol.ed); }
   }
   flush();
   return html + '</section>';
@@ -947,9 +1270,11 @@ async function openReader(o) {
   else if (o.pi != null) { pi = o.pi; if (o.off != null) target = { off: o.off }; }
   Object.assign(R, { ed, v: o.v, vol, first: pi, last: Math.min(vol.n - 1, pi + 1), hl: o.hl || null, item: null, pt: 1, cur: pi });
   renderReader();
+  if (SUTTA_VOL(o.v)) loadVol(ed === 'th' ? 'pali' : 'th', o.v).catch(() => {});   // ready for one-tap copy of the other edition
   const sec = $(`.pg[data-pi="${pi}"]`, rdBody);
-  let el = null;
-  if (target && target.item != null) { el = $(`.it[data-it="${target.item}"][data-pt="${target.pt}"]`, sec) || $(`.it[data-it="${target.item}"]`, sec); if (el) el.classList.add('tgt'); }
+  let el = o.u != null ? (rdBody.querySelector(`.hd[data-i="${o.u}"]`) || rdBody.querySelector(`[data-u="${o.u}"]`)) : null;
+  if (el) { /* the unit's title (Pali) */ }
+  else if (target && target.item != null) { el = $(`.it[data-it="${target.item}"][data-pt="${target.pt}"]`, sec) || $(`.it[data-it="${target.item}"]`, sec); if (el) el.classList.add('tgt'); }
   else if (target && target.head) { el = document.getElementById(target.head); if (el) el.classList.add('tgt'); }
   else if (target && target.off != null) { el = $('mark', sec); }
   requestAnimationFrame(() => { scrollToEl(el || sec); trackPos(); });
@@ -973,9 +1298,9 @@ function trackPos() {
   let cur = secs[0];
   for (const s of secs) { if (s.getBoundingClientRect().bottom > topY) { cur = s; break; } }
   const pi = +cur.dataset.pi; let it = null;
-  for (const x of $$('.it, .hd', cur)) { if (x.getBoundingClientRect().top <= topY + 80) it = x; else break; }
+  for (const x of $$('.it, .hd, .cpb', cur)) { if (x.getBoundingClientRect().top <= topY + 80) it = x; else break; }
   let mk, e = null;
-  if (it && it.classList.contains('hd') && S.IX) { e = S.IX.E[+it.dataset.i]; mk = { n: e.it, pt: e.pt }; }
+  if (it && !it.classList.contains('it') && S.IX) { e = S.IX.E[+(it.dataset.i || it.dataset.u)]; mk = { n: e.it, pt: e.pt }; }
   else if (it) mk = { n: +it.dataset.it, pt: +it.dataset.pt };
   else mk = markAt(R.vol, R.vol.bodies[pi]);
   if (!mk.n) { const k = Array.prototype.findIndex.call(R.vol.mOff, o => o >= R.vol.bodies[pi]); if (k >= 0) mk = { n: R.vol.mN[k], pt: R.vol.mPart[k] }; }
@@ -1005,6 +1330,67 @@ async function copyText(t) {
     const ta = document.createElement('textarea'); ta.value = t; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select();
     let ok = false; try { ok = document.execCommand('copy'); } catch (er) { ok = false; } ta.remove(); return ok;
   }
+}
+// The clipboard call must start inside the tap, so every copy below builds its text synchronously.
+async function doCopy(txt, msg) {
+  if (await copyText(txt)) toast(msg, 3600);
+  else openManualCopy(txt);
+}
+function openManualCopy(txt) {
+  openSheet('คัดลอกด้วยตนเอง', `<p class="note">เบราว์เซอร์นี้ไม่ให้คัดลอกอัตโนมัติ ข้อความถูกเลือกไว้ในกล่องแล้ว แตะค้างแล้วเลือก “คัดลอก”</p><textarea class="field cpta" id="cpTa" readonly aria-label="ข้อความที่จะคัดลอก"></textarea>`);
+  const ta = $('#cpTa'); ta.value = txt;
+  try { ta.focus(); ta.select(); ta.setSelectionRange(0, txt.length); } catch (e) { /* selection is a convenience */ }
+}
+function unitFor(e, ed) { const vol = S.vols.get(ed + e.v); return vol ? unitText(S.IX, vol, e, S.cpClean) : undefined; }
+function unitMsg(e, ed, txt) {
+  const n = txt.length;
+  return `คัดลอก${ED_NAME[ed]}ทั้ง${unitLabel(e)}แล้ว · ${n.toLocaleString()} ตัวอักษร${n > LINE_LIMIT ? ' · ยาวเกิน 1 ข้อความ LINE แบ่งส่วนได้ที่ปุ่ม ⋯' : ''}`;
+}
+// The other edition is still loading: let the clipboard wait for it where the browser supports that.
+function copyWhenLoaded(e, ed) {
+  const p = loadVol(ed, e.v).then(vol => { const u = unitText(S.IX, vol, e, S.cpClean); if (!u) throw new Error('none'); return u.text; });
+  p.catch(() => {});
+  try {
+    if (window.ClipboardItem && navigator.clipboard && navigator.clipboard.write) {
+      navigator.clipboard.write([new ClipboardItem({ 'text/plain': p.then(t => new Blob([t], { type: 'text/plain' })) })])
+        .then(() => p.then(t => toast(unitMsg(e, ed, t), 3600)),
+              () => p.then(() => toast('เตรียมข้อความเสร็จแล้ว แตะคัดลอกอีกครั้ง'), () => toast(`ไม่พบข้อความช่วงนี้ใน${ED_NAME[ed]}`)));
+      toast(`กำลังเตรียม${ED_NAME[ed]}…`);
+      return;
+    }
+  } catch (err) { /* fall back below */ }
+  toast(`กำลังเตรียม${ED_NAME[ed]} แตะคัดลอกอีกครั้งในอีกครู่`);
+}
+function openCopySheet(e) {
+  S.cpE = e; S.cpDone = new Set(); renderCopySheet(true);
+  for (const ed of ['th', 'pali']) if (!S.vols.has(ed + e.v)) loadVol(ed, e.v).then(() => { if (!$('#sheet').hidden && S.cpE === e) renderCopySheet(); }).catch(() => {});
+}
+function renderCopySheet(fresh) {
+  const e = S.cpE, us = { th: unitFor(e, 'th'), pali: unitFor(e, 'pali') };
+  const big = ed => {
+    const u = us[ed];
+    if (u === undefined) return `<div class="cpbig is-wait"><b>${ED_NAME[ed]}</b><span>กำลังโหลด…</span></div>`;
+    if (!u) return `<div class="cpbig is-wait"><b>${ED_NAME[ed]}</b><span>ไม่พบข้อความช่วงนี้</span></div>`;
+    return `<button class="cpbig" data-act="cp-do" data-ed="${ed}" data-part="0">${ICON_COPY}<b>${ED_NAME[ed]}</b><span>${u.text.length.toLocaleString()} ตัวอักษร</span></button>`;
+  };
+  let h = `<div class="lbl">ทั้ง${unitLabel(e)}</div><div class="cpgrid">${big('th')}${big('pali')}</div>
+    <label class="cpchk"><input type="checkbox" id="cpClean"${S.cpClean ? ' checked' : ''}> ฉบับบาลี: ตัดเลขเชิงอรรถและเครื่องหมายอ้างอิงในบรรทัดออก</label>`;
+  const longest = Math.max(us.th ? us.th.text.length : 0, us.pali ? us.pali.text.length : 0);
+  if (longest > 5000) {
+    h += `<div class="lbl">แบ่งเป็นส่วน</div><p class="note" style="margin-top:0">สำหรับแอปที่จำกัดความยาวต่อข้อความ ทุกส่วนมีชื่อและที่มากำกับ</p>
+      <div class="sizes">${CP_SIZES.map(([s, t]) => `<button class="chip" data-act="cp-size" data-s="${s}" aria-pressed="${S.cpSize === s}">${t}</button>`).join('')}</div>`;
+    for (const ed of ['th', 'pali']) {
+      const u = us[ed]; if (!u) continue;
+      const parts = splitParts(u, S.cpSize);
+      h += `<div class="cpparts"><span class="cpp-ed">${ED_NAME[ed]} · ${parts.length === 1 ? 'สั้นพอ ไม่ต้องแบ่ง' : `${parts.length} ส่วน`}</span>` +
+        (parts.length > 1 ? parts.map((p, k) => `<button class="chip${S.cpDone.has(ed + (k + 1)) ? ' done' : ''}" data-act="cp-do" data-ed="${ed}" data-part="${k + 1}">${ICON_COPY}ส่วน ${k + 1}/${parts.length}<span class="n">${p.length.toLocaleString()}</span></button>`).join('') : '') + '</div>';
+    }
+  }
+  const sel = lastSel.text && Date.now() - lastSel.t < 60000;
+  h += `<div class="lbl">อ้างอิง</div><div class="chips"><button class="chip" data-act="cp-cite">${ICON_COPY}ชื่อและที่มา</button>${sel ? `<button class="chip" data-act="cp-sel">${ICON_COPY}ข้อความที่เลือก + ที่มา</button>` : ''}</div>`;
+  const keep = $('#shB').scrollTop;
+  openSheet(`คัดลอก · ${(e.num ? e.num + '. ' : '') + e.title}`, h);
+  if (!fresh) $('#shB').scrollTop = keep;
 }
 function link84000() {
   if (!R.item) return null;
@@ -1055,7 +1441,9 @@ function openSettings() {
     <div class="chips"><button class="chip" data-act="dl" data-ed="th">ฉบับหลวง ${SIZE_MB.th} MB</button><button class="chip" data-act="dl" data-ed="pali">บาลีสยามรัฐ ${SIZE_MB.pali} MB</button><button class="chip" data-act="clearcache">ล้างข้อมูลที่เก็บไว้</button></div>
     <p class="status" id="dlStatus"></p>
     <div class="lbl">เกี่ยวกับข้อมูล</div>
-    <p class="note">ข้อความพระไตรปิฎกภาษาไทย ฉบับหลวง และบาลีฉบับสยามรัฐ จากฐานข้อมูลเปิด D‑Tipitaka ซึ่งรวบรวมจากโปรแกรม E‑Tipitaka · เลขข้อ (ข้อ) ตรงกับ 84000.org ใช้อ้างอิงข้ามกันได้ ส่วนเลขหน้าเป็นของฉบับดิจิทัลนี้และอาจไม่ตรงกับหน้าใน 84000.org · ชื่อพระสูตรสกัดจากหัวข้อในตัวบท อาจตกหล่นบางหัวข้อ</p>`);
+    <p class="note">ข้อความพระไตรปิฎกภาษาไทย ฉบับหลวง และบาลีฉบับสยามรัฐ จากฐานข้อมูลเปิด D‑Tipitaka ซึ่งรวบรวมจากโปรแกรม E‑Tipitaka · เลขข้อ (ข้อ) ตรงกับ 84000.org ใช้อ้างอิงข้ามกันได้ ส่วนเลขหน้าเป็นของฉบับดิจิทัลนี้และอาจไม่ตรงกับหน้าใน 84000.org · ชื่อพระสูตรสกัดจากหัวข้อในตัวบท อาจตกหล่นบางหัวข้อ</p>
+    <div class="lbl">คัดลอกทั้งพระสูตร</div>
+    <p class="note">ใช้ได้กับพระสุตตันตปิฎก (เล่ม 9–33) ทั้งฉบับหลวงและบาลี ขอบเขตพระสูตรอิงหัวข้อในตัวบท ช่วงที่ต้นฉบับย่อหลายสูตรไว้ใต้หัวข้อเดียว (พบมากในสังยุตตนิกาย) จะคัดลอกมาทั้งกลุ่ม · ฉบับหลวงบางสูตรเขียนเต็มส่วนที่บาลีย่อไว้ จึงยาวกว่าฉบับบาลีมาก</p>`);
 }
 async function downloadAll(ed) {
   const st = $('#dlStatus');
@@ -1083,13 +1471,16 @@ $('#sform').addEventListener('submit', e => {
   if (!ref) runText();
 });
 document.addEventListener('input', e => { if (e.target.id === 'tocF') $('#tocL').innerHTML = tocRows(+e.target.dataset.v, e.target.value); });
+document.addEventListener('change', e => {
+  if (e.target.id === 'cpClean') { S.cpClean = e.target.checked; LS.set('cpClean', S.cpClean); S.cpDone = new Set(); renderCopySheet(); }
+});
 function goRef(ref) {
   if (ref.kind === 'item') openReader({ ed: S.ed, v: ref.v, item: ref.item });
   else if (ref.kind === 'page') openReader({ ed: S.ed, v: ref.v, page: ref.page });
 }
 function openEntry(e) {
   if (S.ed === 'th') openReader({ ed: 'th', v: e.v, page: e.p, line: e.l });
-  else openReader({ ed: 'pali', v: e.v, item: e.it, pt: e.pt });
+  else openReader({ ed: 'pali', v: e.v, item: e.it, pt: e.pt, u: isUnit(S.IX, e) ? e.i : null });
 }
 document.addEventListener('click', async e => {
   const b = e.target.closest('[data-act]'); if (!b) return;
@@ -1130,12 +1521,47 @@ document.addEventListener('click', async e => {
     case 'close': closeReader(false); break;
     case 'retry-open': if (R.retry) openReader(R.retry); break;
     case 'prev': prependPage(); break;
-    case 'red': { const ed = b.dataset.ed; if (ed === R.ed) break; openReader({ ed, v: R.v, item: R.item || 1, pt: R.pt || 1, hl: null }); break; }
+    case 'red': {
+      const ed = b.dataset.ed; if (ed === R.ed) break;
+      const un = S.IX && R.entry ? unitAt(S.IX, R.entry) : null;      // at the top of a sutta: land on its heading in the other edition
+      openReader({ ed, v: R.v, item: R.item || 1, pt: R.pt || 1, hl: null, u: un && un.it === R.item && un.pt === R.pt ? un.i : null });
+      break;
+    }
     case 'toc': openToc(R.v); break;
-    case 'cite': {
+    case 'copy-menu': {
+      const u = S.IX && R.entry ? unitAt(S.IX, R.entry) : null;
+      if (u) { openCopySheet(u); break; }
+      // outside the Sutta Pitaka: the selected passage with its source, as before
       const sel = lastSel.text && Date.now() - lastSel.t < 60000 ? lastSel.text : '';
-      const txt = sel ? `“${sel}”\n— ${citation()}` : citation();
-      toast((await copyText(txt)) ? (sel ? 'คัดลอกข้อความพร้อมที่มาแล้ว' : 'คัดลอกที่มาแล้ว · เลือกข้อความก่อนเพื่อคัดลอกพร้อมเนื้อหา') : txt);
+      doCopy(sel ? `“${sel}”\n— ${citation()}` : citation(), sel ? 'คัดลอกข้อความพร้อมที่มาแล้ว' : 'คัดลอกที่มาแล้ว · เลือกข้อความก่อนเพื่อคัดลอกพร้อมเนื้อหา');
+      break;
+    }
+    case 'cp-unit': {
+      const e = S.IX.E[+b.dataset.i], ed = b.dataset.ed, u = unitFor(e, ed);
+      if (u === undefined) { copyWhenLoaded(e, ed); break; }
+      if (!u) { toast(`ไม่พบข้อความช่วงนี้ใน${ED_NAME[ed]}`); break; }
+      doCopy(u.text, unitMsg(e, ed, u.text));
+      break;
+    }
+    case 'cp-sheet': openCopySheet(S.IX.E[+b.dataset.i]); break;
+    case 'cp-do': {
+      const e = S.cpE, ed = b.dataset.ed, part = +b.dataset.part, u = e && unitFor(e, ed);
+      if (!u) { toast('กำลังโหลดข้อความ ลองอีกครั้ง'); break; }
+      if (!part) { doCopy(u.text, unitMsg(e, ed, u.text)); break; }
+      const parts = splitParts(u, S.cpSize), txt = parts[part - 1];
+      doCopy(txt, `คัดลอก${ED_NAME[ed]} ส่วนที่ ${part}/${parts.length} แล้ว · ${txt.length.toLocaleString()} ตัวอักษร`);
+      S.cpDone.add(ed + part); b.classList.add('done');
+      break;
+    }
+    case 'cp-size': S.cpSize = +b.dataset.s; LS.set('cpSize', S.cpSize); S.cpDone = new Set(); renderCopySheet(); break;
+    case 'cp-cite': {
+      const e = S.cpE, u = e && (unitFor(e, R.open ? R.ed : 'th') || unitFor(e, 'th'));
+      doCopy(u ? `${u.name} (${u.cite})` : citation(), 'คัดลอกชื่อและที่มาแล้ว');
+      break;
+    }
+    case 'cp-sel': {
+      const e = S.cpE, u = e && (unitFor(e, R.open ? R.ed : 'th') || unitFor(e, 'th'));
+      doCopy(`“${lastSel.text}”\n— ${u ? `${u.name} (${u.cite})` : citation()}`, 'คัดลอกข้อความพร้อมที่มาแล้ว');
       break;
     }
     case 'ext': {
