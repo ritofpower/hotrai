@@ -53,6 +53,15 @@ button{cursor:pointer}
 .mark{font-family:var(--font-mark);font-weight:700;font-size:30px;line-height:1;color:var(--accent);margin:0}
 .brand-sub{font-size:12.5px;color:var(--muted);line-height:1.35}
 .grow{flex:1}
+/* top tabs: one row beside the mark; on phones they drop to their own full-width row */
+.brand{flex-wrap:wrap}
+.tabs{display:flex;gap:6px;margin-left:auto}
+.tabs button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:7px 13px;font:500 13.5px/1.2 var(--font-ui);white-space:nowrap}
+.tabs button:hover{border-color:var(--accent)}
+.tabs button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+@media (max-width:560px){.tabs{flex-basis:100%}.tabs button{flex:1 1 auto;padding:7px 8px}}
+body.reading .tabs{flex-basis:100%}
+body.reading .tabs button{flex:1 1 auto}
 .iconbtn{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:12px;border:0;background:transparent;color:var(--ink)}
 .iconbtn:hover{background:var(--hover)}
 .iconbtn svg{width:22px;height:22px}
@@ -237,6 +246,35 @@ details.pit summary .n{color:var(--muted);font-weight:400;font-size:13px}
 .lbl{font-size:12.5px;font-weight:600;color:var(--muted);letter-spacing:.05em;margin:14px 0 4px}
 .sizes{display:flex;gap:6px;flex-wrap:wrap}
 .toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:80;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;max-width:min(92vw,520px);box-shadow:0 6px 24px rgb(0 0 0 / .2)}
+/* ---------- saved suttas and sets ---------- */
+.vhead{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;margin:18px 0 10px}
+.vhead h2{margin:0;font:600 21px/1.3 var(--font-text)}
+.vhead .n{color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}
+.vhead .chip{display:inline-flex;align-items:center;gap:6px}
+.vhead .chip svg{width:15px;height:15px}
+.vhead .chip.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.back{border:0;background:none;color:var(--accent-strong);font-weight:600;font-size:14px;padding:4px 0;flex-basis:100%;text-align:left}
+.svq{font-family:var(--font-text);font-size:15px;line-height:1.65;margin-top:4px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.ord{display:inline-grid;place-items:center;min-width:1.75em;height:1.75em;padding:0 .4em;margin-right:8px;border-radius:999px;background:var(--sunk);color:var(--muted);font:600 12.5px/1 var(--font-ui);vertical-align:3px;font-variant-numeric:tabular-nums}
+.svrow{display:flex;align-items:center;gap:2px;border-bottom:1px solid var(--line);padding:6px 0;background:var(--bg)}
+.svrow .sv-body{flex:1;min-width:0;padding:2px 4px}
+.svrow .t1{font-size:16.5px}
+.svrow .svq{-webkit-line-clamp:1;font-size:14px}
+.svrow .iconbtn{width:38px;height:38px;flex:none;color:var(--muted)}
+.svrow .iconbtn:disabled{opacity:.3;cursor:default;background:none}
+.svrow .iconbtn svg{width:20px;height:20px}
+.sv-handle{flex:none;display:grid;place-items:center;width:36px;height:46px;color:var(--muted);cursor:grab;touch-action:none;border-radius:10px}
+.sv-handle:hover{background:var(--hover)}
+.sv-handle svg{width:20px;height:20px}
+.svrow.dragging{position:relative;z-index:2;background:var(--accent-soft);border-radius:12px;box-shadow:0 6px 20px rgb(0 0 0 / .18)}
+body.sv-drag{user-select:none;-webkit-user-select:none;cursor:grabbing}
+.svnew{display:flex;gap:8px;align-items:center;margin:6px 0 12px}
+.svnew .field{margin:0;flex:1;min-width:0}
+.svsets{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 2px}
+.svsets .chip{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;font-size:14px}
+.svprev{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:var(--bg);margin:10px 0 4px}
+.svprev .t1{font-size:17px}
+.sheet .seg{margin-top:8px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
@@ -247,7 +285,11 @@ details.pit summary .n{color:var(--muted);font-weight:400;font-size:13px}
     <h1 class="mark">หอไตร</h1>
     <div class="brand-sub">ค้นพระไตรปิฎก ฉบับหลวง ๔๕ เล่ม<br>พร้อมบาลีสยามรัฐ</div>
     <span class="grow"></span>
-    <button class="iconbtn" data-act="settings" aria-label="ตั้งค่าและข้อมูล"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></button>
+    <nav class="tabs" aria-label="เมนู">
+      <button type="button" data-act="view" data-v="saved" aria-pressed="false">พระสูตรที่บันทึก</button>
+      <button type="button" data-act="view" data-v="sets" aria-pressed="false">พระสูตรชุด</button>
+      <button type="button" data-act="settings">ตั้งค่า</button>
+    </nav>
   </header>
 
   <div class="sbar">
@@ -289,6 +331,7 @@ details.pit summary .n{color:var(--muted);font-weight:400;font-size:13px}
   <nav class="rd-bar" aria-label="เครื่องมืออ่าน">
     <button data-act="toc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg>สารบัญ</button>
     <button data-act="copy-menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>คัดลอก</button>
+    <button data-act="save-menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h12v16l-6-4-6 4z"/></svg>บันทึก</button>
     <button data-act="ext"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>84000</button>
     <button data-act="aa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19l5-14 5 14M5 14h6M14 19l3.5-9 3.5 9M15.2 16h4.6"/></svg>ตัวอักษร</button>
   </nav>
@@ -821,7 +864,8 @@ const S = {
   ed: LS.get('ed', 'th'), scope: LS.get('scope', 'all'), custom: LS.get('custom', []), loose: false,
   q: '', IX: null, vols: new Map(), text: null, run: 0, showNames: 6, showHits: 40, sort: null, fvol: null,
   mode: LS.get('mode', 'flow'), size: LS.get('size', 18),
-  cpClean: LS.get('cpClean', true), cpSize: LS.get('cpSize', 10000), cpE: null, cpDone: new Set()
+  cpClean: LS.get('cpClean', true), cpSize: LS.get('cpSize', 10000), cpE: null, cpDone: new Set(),
+  view: 'home', setId: null, reorder: false, saved: LS.get('saved', []), sets: LS.get('sets', []), svD: null, svMode: 'whole'
 };
 const IDX_KEY = 'v2/idx';
 const ICON_COPY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>';
@@ -958,6 +1002,13 @@ function famousRows() {
   return `<ul class="list">${rows.join('')}</ul>`;
 }
 function renderHome() {
+  renderTabs();
+  if (S.view === 'saved') return renderSavedView();
+  if (S.view === 'sets') return renderSetsView();
+  if (S.view === 'set') return renderSetView();
+  renderStart();
+}
+function renderStart() {
   const last = LS.get('last', null), recent = LS.get('recent', []);
   let h = '';
   if (last && last.v) {
@@ -1317,8 +1368,18 @@ let lastSel = { text: '', t: 0 };
 document.addEventListener('selectionchange', () => {
   const sel = window.getSelection(); if (!sel || sel.isCollapsed || !R.open) return;
   const node = sel.anchorNode && (sel.anchorNode.nodeType === 1 ? sel.anchorNode : sel.anchorNode.parentElement);
-  if (node && rdBody.contains(node)) lastSel = { text: sel.toString().replace(/\s+/g, ' ').trim(), t: Date.now() };
+  if (node && rdBody.contains(node)) lastSel = { text: sel.toString().replace(/\s+/g, ' ').trim(), t: Date.now(), ed: R.ed, v: R.v, start: sel.getRangeAt(0).startContainer };
 });
+// Item number at the start of the last selection: the nearest item mark before it.
+function selItem() {
+  const st = lastSel.start;
+  if (st && st.isConnected && rdBody.contains(st)) {
+    let best = null;
+    for (const x of $$('.it', rdBody)) { if (x.contains(st) || (x.compareDocumentPosition(st) & Node.DOCUMENT_POSITION_FOLLOWING)) best = x; else break; }
+    if (best) return { it: +best.dataset.it, pt: +best.dataset.pt };
+  }
+  return { it: R.item, pt: R.pt };
+}
 function citation() {
   const e = R.entry;
   const name = e && e.lvl === 3 ? e.title + ' ' : '';
@@ -1409,6 +1470,197 @@ function link84000() {
   };
 }
 
+// ---------- saved suttas (one list) and sets (named, ordered like a playlist) ----------
+// Stored in this browser only. An item keeps its location, so it opens even if the index changes.
+const ICON_GRIP = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg>';
+const ICON_UP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg>';
+const ICON_DOWN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+const ICON_X = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>';
+const ICON_SORT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v16M3 8l4-4 4 4M17 20V4M13 16l4 4 4-4"/></svg>';
+const QUOTE_MAX = 20000;
+const svId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+function svPersist() { LS.set('saved', S.saved); LS.set('sets', S.sets); }
+function svName(x) { return x.quote ? 'บางส่วนของ' + x.title : (x.num ? x.num + '. ' : '') + x.title; }
+function svSame(a, b) { return a.ed === b.ed && a.v === b.v && a.pt === b.pt && a.it === b.it && (a.quote || '') === (b.quote || ''); }
+function svArr(ctx) {
+  if (ctx === 'saved') return S.saved;
+  if (ctx === 'sets') return S.sets;
+  const set = S.sets.find(x => 'set:' + x.id === ctx); return set ? set.items : [];
+}
+function curSet() { return S.sets.find(x => x.id === S.setId) || null; }
+function renderTabs() {
+  const on = S.q.trim() ? '' : S.view === 'set' ? 'sets' : S.view;
+  $$('[data-act="view"]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === on)));
+}
+function setView(v, id) {
+  S.view = v; S.setId = id || null; S.reorder = false;
+  if (v !== 'home' && S.q) { qEl.value = ''; S.q = ''; $('#clearBtn').hidden = true; }
+  renderHome(); window.scrollTo(0, 0);
+}
+
+// What the reader's "บันทึก" button would save: the unit at the selection (or at the reading position) and, with a selection, that passage.
+function saveDraft() {
+  if (!R.open || !R.vol) return null;
+  const sel = lastSel.text && Date.now() - lastSel.t < 60000 && lastSel.v === R.v && lastSel.ed === R.ed;
+  const at = sel ? selItem() : { it: R.item, pt: R.pt };
+  let e = S.IX ? (sel ? entryForItem(S.IX, R.v, at.pt, at.it) : R.entry) : null;
+  if (e) e = unitAt(S.IX, e) || e;
+  const base = e ? { ed: R.ed, v: e.v, it: e.it, pt: e.pt, i: e.i, num: e.num || '', title: e.title, type: e.t, code: e.code || '' }
+                 : { ed: R.ed, v: R.v, it: R.item || 1, pt: R.pt || 1, i: null, num: '', title: volName(R.v) || 'เล่ม ' + R.v, type: '', code: '' };
+  const whole = Object.assign({}, base);
+  const part = sel ? Object.assign({}, base, { it: at.it || base.it, pt: at.pt || base.pt, quote: lastSel.text.replace(/^[๐-๙0-9]+\s+/, '').slice(0, QUOTE_MAX) }) : null;
+  return { whole, part, unit: e ? 'ทั้ง' + unitLabel(e) : 'ทั้งตอน' };
+}
+function openSaveSheet() {
+  const d = saveDraft();
+  if (!d) { toast('เปิดอ่านพระสูตรก่อน แล้วจึงบันทึก'); return; }
+  S.svD = d; S.svMode = d.part ? 'part' : 'whole'; renderSaveSheet();
+}
+function svItemBody(x, n) {
+  const title = x.quote ? 'บางส่วนของ' + H(x.title) : (x.num ? `<span class="no">${H(x.num)}.</span>` : '') + H(x.title);
+  return `<div class="t1">${n ? `<span class="ord">${n}</span>` : ''}${title}${x.code ? `<span class="tag code">${H(x.code)}</span>` : ''}${x.ed === 'pali' ? '<span class="tag">บาลี</span>' : ''}</div>` +
+    (x.quote ? `<div class="svq">“${H(x.quote)}”</div>` : '') +
+    `<div class="loc">${vtag(x.v)}<span>${H(volName(x.v))}</span><span>ข้อ ${x.it}</span></div>`;
+}
+function renderSaveSheet() {
+  const d = S.svD, x = S.svMode === 'part' && d.part ? d.part : d.whole;
+  let h = d.part ? `<div class="seg" role="group" aria-label="บันทึกส่วนไหน"><button data-act="sv-mode" data-m="part" aria-pressed="${S.svMode === 'part'}">บางส่วนที่เลือก</button><button data-act="sv-mode" data-m="whole" aria-pressed="${S.svMode === 'whole'}">${d.unit}</button></div>` : '';
+  h += `<div class="svprev">${svItemBody(x, 0)}</div>`;
+  if (!d.part) h += `<p class="note" style="margin-top:4px">ลากเลือกข้อความก่อนกดบันทึก เพื่อเก็บเฉพาะบางส่วน</p>`;
+  const had = S.saved.some(y => svSame(y, x));
+  h += `<div class="lbl">บันทึกลงใน</div>
+    <button class="cpbig" data-act="sv-save" data-to="list" style="width:100%"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h12v16l-6-4-6 4z"/></svg><b>รายพระสูตร</b><span>${had ? 'บันทึกไว้แล้ว · จะย้ายขึ้นบนสุด' : `พระสูตรที่บันทึก · ${S.saved.length.toLocaleString()} รายการ`}</span></button>
+    <div class="lbl">หรือลงในพระสูตรชุด</div>`;
+  h += S.sets.length ? `<div class="svsets">${S.sets.map(st => `<button class="chip" data-act="sv-save" data-to="${st.id}">${H(st.name)}<span class="n">${st.items.length}</span></button>`).join('')}</div>`
+                     : '<p class="note" style="margin:2px 0">ยังไม่มีชุด ตั้งชื่อชุดแรกได้เลย</p>';
+  h += `<form class="svnew" data-form="sv-new"><input class="field" name="n" maxlength="80" placeholder="ตั้งชื่อชุดใหม่" aria-label="ชื่อชุดใหม่" enterkeyhint="done"><button class="go" type="submit">สร้างและบันทึก</button></form>`;
+  openSheet(`บันทึก · ${svName(x)}`, h);
+}
+function svSaveTo(to, newName) {
+  const d = S.svD; if (!d) return;
+  const x = Object.assign({ id: svId(), at: Date.now() }, S.svMode === 'part' && d.part ? d.part : d.whole);
+  if (to === 'list') {
+    const had = S.saved.some(y => svSame(y, x));
+    S.saved = S.saved.filter(y => !svSame(y, x)); S.saved.unshift(x);
+    toast(had ? 'ย้ายขึ้นบนสุดของพระสูตรที่บันทึกแล้ว' : `บันทึก “${svName(x)}” แล้ว`);
+  } else {
+    let set = to === 'new' ? null : S.sets.find(y => y.id === to);
+    if (to === 'new') { set = { id: svId(), name: newName, items: [], at: Date.now() }; S.sets.push(set); }
+    if (!set) return;
+    if (set.items.some(y => svSame(y, x))) { toast(`มีในชุด “${set.name}” แล้ว`); closeSheet(); return; }
+    set.items.push(x);
+    toast(`เพิ่มลงชุด “${set.name}” เป็นลำดับที่ ${set.items.length} แล้ว`);
+  }
+  svPersist(); closeSheet();
+  if (!S.q.trim() && S.view !== 'home') renderHome();
+}
+function svOpen(x) {
+  const e = S.IX && x.i != null ? S.IX.E[x.i] : null;
+  if (!x.quote && e && e.v === x.v && e.it === x.it && e.pt === x.pt && e.title === x.title) { openEntryIn(e, x.ed); return; }
+  openReader({ ed: x.ed, v: x.v, item: x.it, pt: x.pt, hl: x.quote ? quoteHl(x.quote) : null });
+}
+// Highlight the opening words of a saved passage; lines in the source can break anywhere, so allow spaces between letters.
+function quoteHl(q) {
+  const t = q.replace(/^[\s0-9๐-๙.\[\]()]+/, '').replace(/[\s\-]+/g, '').slice(0, 30);
+  if (t.length < 4) return null;
+  return [[...t].map(c => c.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('[\\s\\-]*')];
+}
+
+function svListHTML(ctx, arr, body, openAct) {
+  if (S.reorder) return `<ul class="list svlist" data-ctx="${ctx}">${arr.map((x, k) => `<li class="svrow" data-id="${x.id}">
+    <span class="sv-handle" title="ลากเพื่อย้าย">${ICON_GRIP}</span><div class="sv-body">${body(x, k)}</div>
+    <button class="iconbtn" data-act="sv-up" aria-label="เลื่อนขึ้น"${k === 0 ? ' disabled' : ''}>${ICON_UP}</button>
+    <button class="iconbtn" data-act="sv-down" aria-label="เลื่อนลง"${k === arr.length - 1 ? ' disabled' : ''}>${ICON_DOWN}</button>
+    <button class="iconbtn" data-act="sv-del" aria-label="ลบออก">${ICON_X}</button></li>`).join('')}</ul>`;
+  return `<ul class="list svlist" data-ctx="${ctx}">${arr.map((x, k) => `<li data-id="${x.id}"><button class="row" data-act="${openAct}">${body(x, k)}</button></li>`).join('')}</ul>`;
+}
+function reorderBtn(n) {
+  if (n < 2 && !S.reorder) return '';
+  return S.reorder ? `<button class="chip on" data-act="sv-reorder">เสร็จ</button>` : `<button class="chip" data-act="sv-reorder">${ICON_SORT}สลับลำดับ</button>`;
+}
+const reorderNote = () => S.reorder ? '<p class="note">ลากที่ปุ่ม ⠿ เพื่อย้ายข้ามหลายรายการ หรือกดลูกศรเพื่อเลื่อนทีละรายการ · กด × เพื่อลบออก</p>' : '';
+function renderSavedView() {
+  const n = S.saved.length;
+  let h = `<div class="vhead"><button class="back" data-act="view" data-v="home">‹ หน้าแรก</button><h2>พระสูตรที่บันทึก</h2><span class="n">${n.toLocaleString()} รายการ</span><span class="grow"></span>${reorderBtn(n)}</div>${reorderNote()}`;
+  h += n ? svListHTML('saved', S.saved, x => svItemBody(x, 0), 'sv-open')
+         : '<p class="note">ยังไม่มีพระสูตรที่บันทึก · เปิดอ่านพระสูตรแล้วแตะ “บันทึก” ที่แถบล่าง ถ้าลากเลือกข้อความไว้ จะบันทึกเฉพาะส่วนนั้น</p>';
+  $('#main').innerHTML = h;
+}
+function renderSetsView() {
+  const n = S.sets.length;
+  let h = `<div class="vhead"><button class="back" data-act="view" data-v="home">‹ หน้าแรก</button><h2>พระสูตรชุด</h2><span class="n">${n.toLocaleString()} ชุด</span><span class="grow"></span>${reorderBtn(n)}</div>${reorderNote()}`;
+  if (!S.reorder) h += `<form class="svnew" data-form="set-new"><input class="field" name="n" maxlength="80" placeholder="ชื่อชุดใหม่ เช่น บทสวดเช้า" aria-label="ชื่อชุดใหม่" enterkeyhint="done"><button class="go" type="submit">สร้างชุดใหม่</button></form>`;
+  const body = st => `<div class="t1">${H(st.name)}</div><div class="loc"><span>${st.items.length.toLocaleString()} รายการ</span>${st.items.length ? `<span>${H(st.items.slice(0, 3).map(svName).join(' · '))}${st.items.length > 3 ? ' …' : ''}</span>` : ''}</div>`;
+  h += n ? svListHTML('sets', S.sets, body, 'set-open') : '<p class="note">ยังไม่มีชุด สร้างชุดแล้วเพิ่มพระสูตรจากปุ่ม “บันทึก” ในหน้าอ่าน เรียงลำดับได้เหมือนเพลย์ลิสต์</p>';
+  $('#main').innerHTML = h;
+}
+function renderSetView() {
+  const set = curSet(); if (!set) { S.view = 'sets'; renderSetsView(); return; }
+  const n = set.items.length;
+  let h = `<div class="vhead"><button class="back" data-act="view" data-v="sets">‹ พระสูตรชุดทั้งหมด</button>`;
+  h += S.reorder ? `<form class="svnew" data-form="set-name" style="flex:1;margin:0"><input class="field" name="n" maxlength="80" value="${H(set.name)}" aria-label="ชื่อชุด"><button class="chip" type="submit">เปลี่ยนชื่อ</button></form>${reorderBtn(n)}`
+                 : `<h2>${H(set.name)}</h2><span class="n">${n.toLocaleString()} รายการ</span><span class="grow"></span>${n > 1 ? reorderBtn(n) : `<button class="chip" data-act="sv-reorder">แก้ไข</button>`}`;
+  h += `</div>${reorderNote()}`;
+  h += n ? svListHTML('set:' + set.id, set.items, (x, k) => svItemBody(x, k + 1), 'sv-open')
+         : '<p class="note">ชุดนี้ยังว่าง · เปิดอ่านพระสูตรแล้วแตะ “บันทึก” ที่แถบล่าง แล้วเลือกชุดนี้</p>';
+  if (S.reorder) h += `<button class="more" data-act="set-del">ลบชุดนี้</button>`;
+  $('#main').innerHTML = h;
+}
+function svMove(ctx, id, d) {
+  const arr = svArr(ctx), k = arr.findIndex(x => x.id === id), j = k + d;
+  if (k < 0 || j < 0 || j >= arr.length) return;
+  arr.splice(j, 0, arr.splice(k, 1)[0]); svPersist(); renderHome();
+  const b = $(`[data-ctx="${ctx}"] [data-id="${id}"] [data-act="${d < 0 ? 'sv-up' : 'sv-down'}"]`);
+  if (b && !b.disabled) b.focus();
+}
+// Drag a row by its handle; the row moves through the list as the pointer passes each neighbour's middle,
+// and the page scrolls when the pointer nears the top or bottom.
+let drag = null;
+document.addEventListener('pointerdown', e => {
+  const h = e.target.closest('.sv-handle'); if (!h || e.button > 0) return;
+  const li = h.closest('li'); e.preventDefault();
+  drag = { li, ul: li.parentElement, y: e.clientY, raf: 0, moved: false };
+  try { h.setPointerCapture(e.pointerId); } catch (er) { /* capture is optional */ }
+  li.classList.add('dragging'); document.body.classList.add('sv-drag');
+  dragLoop();
+});
+document.addEventListener('pointermove', e => { if (drag) { drag.y = e.clientY; dragPlace(); } });
+function dragPlace() {
+  const { li, ul, y } = drag;
+  let p = li.previousElementSibling, n = li.nextElementSibling;
+  while (p && y < p.getBoundingClientRect().top + p.offsetHeight / 2) { ul.insertBefore(li, p); p = li.previousElementSibling; drag.moved = true; }
+  while (n && y > n.getBoundingClientRect().top + n.offsetHeight / 2) { ul.insertBefore(n, li); n = li.nextElementSibling; drag.moved = true; }
+}
+function dragLoop() {
+  if (!drag) return;
+  const top = $('.sbar').getBoundingClientRect().bottom + 50, bot = innerHeight - 60;
+  const dy = drag.y < top ? -Math.ceil((top - drag.y) / 4) : drag.y > bot ? Math.ceil((drag.y - bot) / 4) : 0;
+  if (dy) { window.scrollBy(0, Math.max(-24, Math.min(24, dy))); dragPlace(); }
+  drag.raf = requestAnimationFrame(dragLoop);
+}
+function dragEnd() {
+  if (!drag) return;
+  cancelAnimationFrame(drag.raf);
+  const { li, ul, moved } = drag; drag = null;
+  li.classList.remove('dragging'); document.body.classList.remove('sv-drag');
+  if (!moved) return;
+  const arr = svArr(ul.dataset.ctx), byId = new Map(arr.map(x => [x.id, x]));
+  const next = [...ul.children].map(x => byId.get(x.dataset.id)).filter(Boolean);
+  if (next.length === arr.length) arr.splice(0, arr.length, ...next);
+  svPersist(); renderHome();
+}
+document.addEventListener('pointerup', dragEnd);
+document.addEventListener('pointercancel', dragEnd);
+document.addEventListener('submit', e => {
+  const f = e.target.closest('[data-form]'); if (!f) return;
+  e.preventDefault();
+  const name = (f.elements.n && f.elements.n.value || '').replace(/\s+/g, ' ').trim();
+  if (!name) { toast('พิมพ์ชื่อชุดก่อน'); if (f.elements.n) f.elements.n.focus(); return; }
+  if (f.dataset.form === 'sv-new') svSaveTo('new', name);
+  else if (f.dataset.form === 'set-new') { const st = { id: svId(), name, items: [], at: Date.now() }; S.sets.push(st); svPersist(); setView('set', st.id); toast(`สร้างชุด “${name}” แล้ว`); }
+  else if (f.dataset.form === 'set-name') { const st = curSet(); if (st) { st.name = name; svPersist(); toast('เปลี่ยนชื่อชุดแล้ว'); renderHome(); } }
+});
+
 // ---------- sheets ----------
 function openSheet(title, body) { $('#shT').textContent = title; $('#shB').innerHTML = body; $('#sheet').hidden = false; $('#shB').scrollTop = 0; }
 function closeSheet() { $('#sheet').hidden = true; }
@@ -1463,6 +1715,8 @@ const qEl = $('#q');
 let nameT = 0;
 qEl.addEventListener('input', () => {
   S.q = qEl.value; $('#clearBtn').hidden = !S.q; S.showNames = 6;
+  if (S.q.trim() && S.view !== 'home') { S.view = 'home'; S.reorder = false; }
+  renderTabs();
   clearTimeout(nameT); nameT = setTimeout(renderResults, 110);
 });
 $('#sform').addEventListener('submit', e => {
@@ -1482,8 +1736,9 @@ function goRef(ref) {
   if (ref.kind === 'item') openReader({ ed: S.ed, v: ref.v, item: ref.item });
   else if (ref.kind === 'page') openReader({ ed: S.ed, v: ref.v, page: ref.page });
 }
-function openEntry(e) {
-  if (S.ed === 'th') openReader({ ed: 'th', v: e.v, page: e.p, line: e.l });
+function openEntry(e) { openEntryIn(e, S.ed); }
+function openEntryIn(e, ed) {
+  if (ed === 'th') openReader({ ed: 'th', v: e.v, page: e.p, line: e.l });
   else openReader({ ed: 'pali', v: e.v, item: e.it, pt: e.pt, u: isUnit(S.IX, e) ? e.i : null });
 }
 document.addEventListener('click', async e => {
@@ -1591,8 +1846,37 @@ document.addEventListener('click', async e => {
     case 'dl': b.disabled = true; await downloadAll(b.dataset.ed); b.disabled = false; break;
     case 'clearcache': await idbClear(); toast('ล้างข้อมูลที่เก็บไว้แล้ว'); break;
     case 'sheet-close': closeSheet(); break;
+    case 'view': setView(b.dataset.v === S.view && b.dataset.v !== 'home' ? 'home' : b.dataset.v); break;
+    case 'save-menu': openSaveSheet(); break;
+    case 'sv-mode': S.svMode = b.dataset.m; renderSaveSheet(); break;
+    case 'sv-save': svSaveTo(b.dataset.to); break;
+    case 'sv-open': {
+      const li = b.closest('li'), x = svArr(li.parentElement.dataset.ctx).find(y => y.id === li.dataset.id);
+      if (x) svOpen(x); break;
+    }
+    case 'set-open': setView('set', b.closest('li').dataset.id); break;
+    case 'sv-reorder': S.reorder = !S.reorder; renderHome(); break;
+    case 'sv-up': case 'sv-down': { const li = b.closest('li'); svMove(li.parentElement.dataset.ctx, li.dataset.id, act === 'sv-up' ? -1 : 1); break; }
+    case 'sv-del': {
+      const li = b.closest('li'), ctx = li.parentElement.dataset.ctx, arr = svArr(ctx), k = arr.findIndex(y => y.id === li.dataset.id);
+      if (k < 0) break;
+      if (ctx === 'sets') { S.setId = arr[k].id; openSetDel(); break; }
+      const [gone] = arr.splice(k, 1); svPersist(); renderHome(); toast(`ลบ “${svName(gone)}” ออกแล้ว`); break;
+    }
+    case 'set-del': openSetDel(); break;
+    case 'set-del-yes': {
+      const st = curSet(); if (!st) break;
+      S.sets = S.sets.filter(y => y.id !== st.id); svPersist(); closeSheet();
+      toast(`ลบชุด “${st.name}” แล้ว`);
+      if (S.view === 'set') setView('sets'); else renderHome();
+      break;
+    }
   }
 });
+function openSetDel() {
+  const st = curSet(); if (!st) return;
+  openSheet(`ลบชุด “${st.name}”`, `<p class="note">ชุดนี้มี ${st.items.length.toLocaleString()} รายการ จะลบเฉพาะชุด พระสูตรในรายพระสูตรยังอยู่</p><div class="chips"><button class="go" data-act="set-del-yes">ลบชุดนี้</button><button class="chip" data-act="sheet-close">ยกเลิก</button></div>`);
+}
 function saveRecentIfTyped() { const q = S.q.trim(); if (q) saveRecent(q); }
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') { if (!$('#sheet').hidden) closeSheet(); else if (R.open) closeReader(false); }
