@@ -1387,7 +1387,11 @@ function renderCopySheet(fresh) {
     }
   }
   const sel = lastSel.text && Date.now() - lastSel.t < 60000;
-  h += `<div class="lbl">อ้างอิง</div><div class="chips"><button class="chip" data-act="cp-cite">${ICON_COPY}ชื่อและที่มา</button>${sel ? `<button class="chip" data-act="cp-sel">${ICON_COPY}ข้อความที่เลือก + ที่มา</button>` : ''}</div>`;
+  const cu = us.th || us.pali;
+  h += `<div class="lbl">อ้างอิง</div><div class="cpgrid">
+    <button class="cpbig" data-act="cp-cite">${ICON_COPY}<b>ชื่อและที่มา</b><span>${cu ? H(cu.cite) : 'ชื่อพระสูตรพร้อมเล่ม หน้า ข้อ'}</span></button>
+    ${sel ? `<button class="cpbig" data-act="cp-sel">${ICON_COPY}<b>ข้อความที่เลือก + ที่มา</b><span>${lastSel.text.length.toLocaleString()} ตัวอักษร</span></button>`
+          : `<div class="cpbig is-wait"><b>ข้อความที่เลือก + ที่มา</b><span>เลือกข้อความในหน้าอ่านก่อน</span></div>`}</div>`;
   const keep = $('#shB').scrollTop;
   openSheet(`คัดลอก · ${(e.num ? e.num + '. ' : '') + e.title}`, h);
   if (!fresh) $('#shB').scrollTop = keep;
