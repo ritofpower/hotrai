@@ -170,12 +170,13 @@ details.pit summary .n{color:var(--muted);font-weight:400;font-size:13px}
 .ol{white-space:pre-wrap;line-height:1.75}
 .ol.i1{padding-left:1.2em} .ol.i2{padding-left:2.6em}
 /* copy row under a unit heading, and the copy sheet */
-.cpb{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;max-width:560px;margin:.15em auto 1.2em;text-indent:0;font-family:var(--font-ui)}
-.cpb button{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-width:0;min-height:38px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:5px 6px;font:500 13.5px/1.2 var(--font-ui);white-space:nowrap}
+/* 4 in a row; when the row is narrower than 560px (phones, narrow reader pane) the basis jumps to 50% → 2 on top, 2 below */
+.cpb{display:flex;flex-wrap:wrap;gap:6px;max-width:640px;margin:.15em auto 1.2em;text-indent:0;font-family:var(--font-ui)}
+.cpb button{flex:1 1 clamp(calc(25% - 6px), calc((560px - 100%) * 999), calc(50% - 6px));display:inline-flex;align-items:center;justify-content:center;gap:5px;min-width:0;min-height:38px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:5px 6px;font:500 13.5px/1.2 var(--font-ui);white-space:nowrap}
 .cpb button:hover{border-color:var(--accent)}
 .cpb .cpb-main{border-color:var(--accent);color:var(--accent-strong)}
 .cpb svg{width:15px;height:15px;flex:none}
-.cpb-name{grid-column:1/-1;text-align:center;color:var(--muted);font:500 12.5px/1.45 var(--font-ui)}
+.cpb-name{flex-basis:100%;text-align:center;color:var(--muted);font:500 12.5px/1.45 var(--font-ui)}
 .cpb-name .no{margin-right:3px}
 .hd.ph{font-size:1.04em}
 .cpgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:6px 0 8px}
@@ -824,7 +825,6 @@ const S = {
 };
 const IDX_KEY = 'v2/idx';
 const ICON_COPY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>';
-const ICON_MORE = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg>';
 const CP_SIZES = [[5000, '5,000'], [10000, '10,000 · LINE'], [20000, '20,000 · Messenger'], [60000, '60,000 · Facebook']];
 const LINE_LIMIT = 10000;
 document.documentElement.style.setProperty('--read-size', S.size + 'px');
@@ -1126,14 +1126,13 @@ function marked(text, a, b, ranges) {
   return html + H(text.slice(i, b));
 }
 // Copy row under a unit heading: this edition, the other edition, more options.
-const CPB_ED = { th: 'ไทย', pali: 'บาลี' };
+const CPB_ED = { th: 'ภาษาไทย', pali: 'บาลี' };
 function unitBarHTML(e, ed) {
-  const other = ed === 'th' ? 'pali' : 'th';
+  const b = x => `<button${x === ed ? ' class="cpb-main"' : ''} data-act="cp-unit" data-i="${e.i}" data-ed="${x}" title="คัดลอกทั้ง${unitLabel(e)} ${ED_NAME[x]}">${ICON_COPY}${CPB_ED[x]}</button>`;
   return `<div class="cpb" data-u="${e.i}">${ed === 'pali' ? `<span class="cpb-name">ฉบับหลวง: ${entryLine(e)}</span>` : ''}` +
-    `<button class="cpb-main" data-act="cp-unit" data-i="${e.i}" data-ed="${ed}" title="คัดลอกทั้ง${unitLabel(e)} ${ED_NAME[ed]}">${ICON_COPY}${CPB_ED[ed]}</button>` +
-    `<button data-act="cp-unit" data-i="${e.i}" data-ed="${other}" title="คัดลอกทั้ง${unitLabel(e)} ${ED_NAME[other]}">${ICON_COPY}${CPB_ED[other]}</button>` +
-    `<button data-act="cp-cite" data-i="${e.i}" data-ed="${ed}" title="คัดลอกชื่อและที่มา">${ICON_COPY}ที่มา</button>` +
-    `<button class="cpb-more" data-act="cp-sheet" data-i="${e.i}" title="ตัวเลือกการคัดลอก">${ICON_MORE}อื่นๆ</button></div>`;
+    b('th') + b('pali') +
+    `<button data-act="cp-cite" data-i="${e.i}" data-ed="${ed}" title="คัดลอกชื่อ${unitLabel(e)}และที่มา">${ICON_COPY}ชื่อ${e.t}+อ้างอิง</button>` +
+    `<button data-act="cp-part" data-i="${e.i}" data-ed="${ed}" title="คัดลอกข้อความที่เลือกพร้อมที่มา (ถ้ายังไม่ได้เลือก จะเปิดตัวเลือกการคัดลอก)">${ICON_COPY}บางส่วน+อ้างอิง</button></div>`;
 }
 // Where each unit starts in a Pali volume: its title lines and its first item line.
 function paliUnits(pv) {
@@ -1549,6 +1548,13 @@ document.addEventListener('click', async e => {
       break;
     }
     case 'cp-sheet': openCopySheet(S.IX.E[+b.dataset.i]); break;
+    case 'cp-part': { // selected text + reference; with nothing selected, open the sheet (parts, other options)
+      const e = S.IX.E[+b.dataset.i];
+      if (!(lastSel.text && Date.now() - lastSel.t < 60000)) { openCopySheet(e); break; }
+      const u = unitFor(e, b.dataset.ed) || unitFor(e, 'th');
+      doCopy(`“${lastSel.text}”\n— ${u ? `${u.name} (${u.cite})` : citation()}`, 'คัดลอกข้อความพร้อมที่มาแล้ว');
+      break;
+    }
     case 'cp-do': {
       const e = S.cpE, ed = b.dataset.ed, part = +b.dataset.part, u = e && unitFor(e, ed);
       if (!u) { toast('กำลังโหลดข้อความ ลองอีกครั้ง'); break; }
