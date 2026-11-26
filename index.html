@@ -170,13 +170,12 @@ details.pit summary .n{color:var(--muted);font-weight:400;font-size:13px}
 .ol{white-space:pre-wrap;line-height:1.75}
 .ol.i1{padding-left:1.2em} .ol.i2{padding-left:2.6em}
 /* copy row under a unit heading, and the copy sheet */
-.cpb{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px;margin:.15em 0 1.2em;text-indent:0;font-family:var(--font-ui)}
-.cpb button{display:inline-flex;align-items:center;gap:6px;min-height:34px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:5px 12px;font:500 13px/1.2 var(--font-ui)}
+.cpb{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;max-width:560px;margin:.15em auto 1.2em;text-indent:0;font-family:var(--font-ui)}
+.cpb button{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-width:0;min-height:38px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:5px 6px;font:500 13.5px/1.2 var(--font-ui);white-space:nowrap}
 .cpb button:hover{border-color:var(--accent)}
 .cpb .cpb-main{border-color:var(--accent);color:var(--accent-strong)}
-.cpb .cpb-more{padding:5px 9px}
 .cpb svg{width:15px;height:15px;flex:none}
-.cpb-name{flex-basis:100%;text-align:center;color:var(--muted);font:500 12.5px/1.45 var(--font-ui)}
+.cpb-name{grid-column:1/-1;text-align:center;color:var(--muted);font:500 12.5px/1.45 var(--font-ui)}
 .cpb-name .no{margin-right:3px}
 .hd.ph{font-size:1.04em}
 .cpgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:6px 0 8px}
@@ -1127,12 +1126,14 @@ function marked(text, a, b, ranges) {
   return html + H(text.slice(i, b));
 }
 // Copy row under a unit heading: this edition, the other edition, more options.
+const CPB_ED = { th: 'ไทย', pali: 'บาลี' };
 function unitBarHTML(e, ed) {
   const other = ed === 'th' ? 'pali' : 'th';
   return `<div class="cpb" data-u="${e.i}">${ed === 'pali' ? `<span class="cpb-name">ฉบับหลวง: ${entryLine(e)}</span>` : ''}` +
-    `<button class="cpb-main" data-act="cp-unit" data-i="${e.i}" data-ed="${ed}">${ICON_COPY}คัดลอกทั้ง${unitLabel(e)}</button>` +
-    `<button data-act="cp-unit" data-i="${e.i}" data-ed="${other}">${ICON_COPY}${other === 'pali' ? 'บาลี' : 'ไทย'}</button>` +
-    `<button class="cpb-more" data-act="cp-sheet" data-i="${e.i}" aria-label="ตัวเลือกการคัดลอก">${ICON_MORE}</button></div>`;
+    `<button class="cpb-main" data-act="cp-unit" data-i="${e.i}" data-ed="${ed}" title="คัดลอกทั้ง${unitLabel(e)} ${ED_NAME[ed]}">${ICON_COPY}${CPB_ED[ed]}</button>` +
+    `<button data-act="cp-unit" data-i="${e.i}" data-ed="${other}" title="คัดลอกทั้ง${unitLabel(e)} ${ED_NAME[other]}">${ICON_COPY}${CPB_ED[other]}</button>` +
+    `<button data-act="cp-cite" data-i="${e.i}" data-ed="${ed}" title="คัดลอกชื่อและที่มา">${ICON_COPY}ที่มา</button>` +
+    `<button class="cpb-more" data-act="cp-sheet" data-i="${e.i}" title="ตัวเลือกการคัดลอก">${ICON_MORE}อื่นๆ</button></div>`;
 }
 // Where each unit starts in a Pali volume: its title lines and its first item line.
 function paliUnits(pv) {
@@ -1559,7 +1560,8 @@ document.addEventListener('click', async e => {
     }
     case 'cp-size': S.cpSize = +b.dataset.s; LS.set('cpSize', S.cpSize); S.cpDone = new Set(); renderCopySheet(); break;
     case 'cp-cite': {
-      const e = S.cpE, u = e && (unitFor(e, R.open ? R.ed : 'th') || unitFor(e, 'th'));
+      const e = b.dataset.i ? S.IX.E[+b.dataset.i] : S.cpE, ed = b.dataset.ed || (R.open ? R.ed : 'th');
+      const u = e && (unitFor(e, ed) || unitFor(e, 'th'));
       doCopy(u ? `${u.name} (${u.cite})` : citation(), 'คัดลอกชื่อและที่มาแล้ว');
       break;
     }
